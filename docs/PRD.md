@@ -1,6 +1,4 @@
-
-PRD: Chat-Based Campaign Simulator
-==================================
+# PRD: Chat-Based Campaign Simulator
 
 ### Project Overview
 The **Chat-Based Campaign Simulator** is a web application that allows users to interact with multiple marketing data sources and simulate omnichannel campaign decisions. Inspired by Perplexity-style chat interfaces, it merges event data from multiple sources and generates streaming JSON outputs representing the "right time, right channel, right message, for the right audience."
@@ -55,6 +53,7 @@ This demo project is designed for rapid evaluation and integration with either *
 
 -   **Decision Engine**
     -   Aggregates signals from selected data sources.
+    -   **The core decision engine uses Groq AI for advanced real-time processing and recommendation generation.**
     -   Generates structured JSON payloads with:
         -   Audience segments
         -   Reasoning & scoring

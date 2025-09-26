@@ -53,6 +53,7 @@
 
 ### BE Tasks
 - Develop the core Decision Engine to aggregate signals from selected data sources.
+- Integrate Groq AI to power real-time decision-making and recommendation generation within the engine.
 - Implement logic to generate structured JSON payloads with audience segments, reasoning, scoring, channel plans, and campaign meta.
 - Implement configurable rules to prioritize channels and messages.
 - Ensure the decision engine is modular and extendable.

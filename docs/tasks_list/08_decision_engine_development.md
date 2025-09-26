@@ -1,11 +1,11 @@
 ### 6. Decision Engine Development
 
 #### [CTOC-0030][BE] Develop Core Decision Engine (Signal Aggregation)
-- **Description:** Build the central logic responsible for aggregating event signals from selected data sources.
+- **Description:** Build the central logic responsible for aggregating event signals from selected data sources, leveraging Groq AI for enhanced processing.
 - **Acceptance Criteria:**
     - The engine receives events from multiple configured data sources.
-    - It can combine and process these events into a unified view.
-    - **Unit Tests:** Test signal aggregation logic with various input combinations.
+    - It can combine and process these events into a unified view, utilizing Groq AI's capabilities.
+    - **Unit Tests:** Test signal aggregation logic with various input combinations, ensuring Groq AI integration functions as expected.
 - **Dependencies:**
     - [CTOC-0023][BE] Create `/api/start` Endpoint (Initiation)
     - [CTOC-0033][BE] Implement Local JSON/Generator for Mocked Events
