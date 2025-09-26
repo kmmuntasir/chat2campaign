@@ -143,7 +143,6 @@ This demo project is designed for rapid evaluation and integration with either *
 | M3 | Configurable endpoint system (mock/real toggle) |
 | M4 | Decision engine generates structured JSON payloads |
 | M5 | README, demo GIF, sample payloads, instructions |
-| M6 | Optional: deploy demo on Render/Vercel, host public repo |
 
 -----
 
