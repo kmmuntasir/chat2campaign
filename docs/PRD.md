@@ -172,7 +172,7 @@ Tech Stack (Demo)
 | Layer | Technology / Library | Notes |
 | --- | --- | --- |
 | Frontend | React + Vite + TypeScript | Modern SPA for chat UI |
-| UI Library | Tailwind CSS / basic CSS | For layout & styling |
+| UI Library | Basic CSS (No Tailwind CSS) | For layout & styling |
 | Backend | Node.js + Express | API and WebSocket server |
 | Real-time | ws (WebSocket) or SSE | Streaming JSON payloads |
 | Data Layer | Local JSON / API fetch | Mocked vs real endpoints |
@@ -188,8 +188,6 @@ User Stories
 2.  **As a user**, I want to toggle between mocked and real API endpoints, so I can test locally or with real data.
 
 3.  **As a developer**, I want a modular decision engine, so I can easily extend rules or integrate AI.
-
-4.  **As a hiring evaluator**, I want to see streaming JSON output, so I can judge full-stack skills (frontend + backend + data).
 
 * * * * *
 
