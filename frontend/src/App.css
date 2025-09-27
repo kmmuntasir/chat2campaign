@@ -53,12 +53,13 @@ html, body {
   overflow-y: auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: 20px;
   grid-template-areas: 
     "header header"
     "sources channels"
     "status campaign"
     "debug debug";
+  grid-template-rows: auto minmax(300px, 1fr) auto auto;
 }
 
 .controls-panel h3 {
@@ -113,6 +114,10 @@ html, body {
   padding: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   color: #495057;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .sources-panel h4, .channels-panel h4, .status-panel h4, .campaign-panel h4 {
@@ -146,8 +151,9 @@ html, body {
 
 .data-source-section {
   margin: 0;
-  max-height: 300px;
+  flex: 1;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .data-source-section .data-source-selector {
@@ -159,8 +165,9 @@ html, body {
 
 .channel-section {
   margin: 0;
-  max-height: 280px;
+  flex: 1;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .channel-section .channel-selector {
