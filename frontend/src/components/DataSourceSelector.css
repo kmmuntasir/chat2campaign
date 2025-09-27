@@ -4,6 +4,10 @@
   background: transparent;
   border-radius: 0;
   box-shadow: none;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .selector-header {
@@ -62,10 +66,14 @@
 
 .search-bar {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .search-input {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 8px 12px;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
@@ -89,10 +97,14 @@
 
 .category-filter {
   width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .category-select {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 8px 12px;
   border: 1px solid #e0e0e0;
   border-radius: 6px;

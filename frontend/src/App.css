@@ -112,6 +112,8 @@ html, body {
   flex-direction: column;
   min-height: 0;
   max-height: 100%;
+  min-width: 0;
+  width: 100%;
 }
 
 .connection-panel, .campaign-panel {
@@ -139,6 +141,7 @@ html, body {
 }
 
 
+
 .controls-panel h4 {
   margin: 20px 0 10px 0;
   color: #6c757d;
@@ -151,7 +154,7 @@ html, body {
 .data-source-section {
   margin: 0;
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -162,12 +165,14 @@ html, body {
   border: none;
   padding: 0;
   background: transparent;
+  height: 100%;
+  overflow: hidden;
 }
 
 .channel-section {
   margin: 0;
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -177,6 +182,8 @@ html, body {
   background: transparent;
   border: none;
   padding: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 .status-section {
@@ -269,22 +276,24 @@ html, body {
   box-shadow: none !important;
 }
 
-.campaign-controls {
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 16px;
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+.campaign-panel .campaign-controls {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
-.campaign-controls h4 {
+.campaign-panel .campaign-controls h4 {
   margin: 0 0 12px 0;
   color: #495057;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  text-transform: none;
-  letter-spacing: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 8px;
 }
 
 
