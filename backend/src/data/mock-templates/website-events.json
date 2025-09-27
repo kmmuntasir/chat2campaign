@@ -1,0 +1,100 @@
+{
+  "source_info": {
+    "id": "website",
+    "name": "Website Events",
+    "description": "Web analytics events including page views, sessions, conversions, and user interactions",
+    "category": "Web Analytics"
+  },
+  "event_templates": [
+    {
+      "eventType": "page_view",
+      "weight": 0.6,
+      "frequency": "high",
+      "template": {
+        "page_url": "https://example.com/{{page}}",
+        "page_title": "{{pageTitle}}",
+        "referrer": "{{referrer}}",
+        "session_duration": "{{randomInt:30:600}}",
+        "bounce_rate": "{{randomBoolean:0.3}}",
+        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+      },
+      "samples": [
+        {
+          "page_url": "https://example.com/home",
+          "page_title": "Home Page",
+          "referrer": "https://google.com",
+          "session_duration": 245,
+          "bounce_rate": false
+        }
+      ]
+    },
+    {
+      "eventType": "cart_abandonment",
+      "weight": 0.9,
+      "frequency": "medium",
+      "template": {
+        "cart_value": "{{randomFloat:50:500}}",
+        "items_count": "{{randomInt:1:5}}",
+        "abandonment_stage": "{{randomChoice:['cart','checkout','payment']}}",
+        "time_spent": "{{randomInt:120:900}}",
+        "abandonment_reason": "{{randomChoice:['price_concern','comparison_shopping','distraction','checkout_complexity']}}"
+      },
+      "samples": [
+        {
+          "cart_value": 234.99,
+          "items_count": 3,
+          "abandonment_stage": "checkout",
+          "time_spent": 456,
+          "abandonment_reason": "checkout_complexity"
+        }
+      ]
+    },
+    {
+      "eventType": "conversion",
+      "weight": 0.8,
+      "frequency": "low",
+      "template": {
+        "conversion_type": "{{randomChoice:['purchase','signup','download']}}",
+        "value": "{{randomFloat:20:1000}}",
+        "currency": "USD",
+        "funnel_stage": "{{randomChoice:['awareness','consideration','purchase']}}",
+        "conversion_path": "{{randomChoice:['direct','organic','paid','social']}}"
+      },
+      "samples": [
+        {
+          "conversion_type": "purchase",
+          "value": 156.78,
+          "currency": "USD",
+          "funnel_stage": "purchase",
+          "conversion_path": "organic"
+        }
+      ]
+    }
+  ],
+  "user_segments": [
+    {
+      "segment": "new_visitors",
+      "characteristics": {
+        "session_count": 1,
+        "page_views": "1-3",
+        "time_on_site": "30-120s"
+      }
+    },
+    {
+      "segment": "returning_visitors",
+      "characteristics": {
+        "session_count": "2-10",
+        "page_views": "3-8",
+        "time_on_site": "120-600s"
+      }
+    },
+    {
+      "segment": "loyal_customers",
+      "characteristics": {
+        "session_count": "10+",
+        "page_views": "5-15",
+        "time_on_site": "300-1800s"
+      }
+    }
+  ]
+}

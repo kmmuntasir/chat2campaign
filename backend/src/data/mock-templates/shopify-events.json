@@ -1,0 +1,126 @@
+{
+  "source_info": {
+    "id": "shopify",
+    "name": "Shopify Store",
+    "description": "E-commerce events including orders, customers, products, and inventory management",
+    "category": "E-commerce"
+  },
+  "event_templates": [
+    {
+      "eventType": "order_created",
+      "weight": 0.9,
+      "frequency": "medium",
+      "template": {
+        "order_id": "order_{{timestamp}}", 
+        "order_number": "{{randomInt:1000:9999}}",
+        "total_price": "{{randomFloat:50:1000}}",
+        "currency": "USD",
+        "fulfillment_status": "{{randomChoice:['fulfilled','unfulfilled','partial']}}",
+        "payment_status": "{{randomChoice:['paid','pending','refunded']}}",
+        "customer_type": "{{randomChoice:['new','returning','vip']}}"
+      },
+      "samples": [
+        {
+          "order_id": "order_1234567890",
+          "order_number": 3456,
+          "total_price": 287.95,
+          "currency": "USD",
+          "fulfillment_status": "unfulfilled",
+          "payment_status": "paid",
+          "customer_type": "returning"
+        }
+      ]
+    },
+    {
+      "eventType": "product_viewed",
+      "weight": 0.6,
+      "frequency": "high",
+      "template": {
+        "product_id": "prod_{{randomInt:100:999}}",
+        "product_name": "{{productName}}",
+        "product_price": "{{randomFloat:10:500}}",
+        "product_category": "{{randomChoice:['Electronics','Clothing','Home','Sports']}}",
+        "inventory_quantity": "{{randomInt:0:100}}",
+        "view_source": "{{randomChoice:['search','category','recommendation','direct']}}"
+      },
+      "samples": [
+        {
+          "product_id": "prod_123",
+          "product_name": "Wireless Headphones",
+          "product_price": 199.99,
+          "product_category": "Electronics",
+          "inventory_quantity": 45,
+          "view_source": "search"
+        }
+      ]
+    },
+    {
+      "eventType": "customer_created",
+      "weight": 0.7,
+      "frequency": "low",
+      "template": {
+        "customer_id": "cust_{{randomString:8}}",
+        "email": "{{randomEmail}}",
+        "accepts_marketing": "{{randomBoolean:0.6}}",
+        "registration_source": "{{randomChoice:['website','mobile_app','social_media','referral']}}",
+        "customer_tier": "{{randomChoice:['bronze','silver','gold','platinum']}}"
+      },
+      "samples": [
+        {
+          "customer_id": "cust_abc12345",
+          "email": "john.doe@example.com",
+          "accepts_marketing": true,
+          "registration_source": "website",
+          "customer_tier": "silver"
+        }
+      ]
+    }
+  ],
+  "product_categories": [
+    "Electronics",
+    "Clothing & Fashion", 
+    "Home & Garden",
+    "Sports & Outdoors",
+    "Health & Beauty",
+    "Books & Media",
+    "Toys & Games",
+    "Automotive"
+  ],
+  "sample_products": [
+    {
+      "id": "prod_001",
+      "name": "Wireless Headphones",
+      "price": 199.99,
+      "category": "Electronics"
+    },
+    {
+      "id": "prod_002",
+      "name": "Smart Watch",
+      "price": 299.99,
+      "category": "Electronics"  
+    },
+    {
+      "id": "prod_003",
+      "name": "Running Shoes",
+      "price": 129.99,
+      "category": "Sports & Outdoors"
+    }
+  ],
+  "fulfillment_scenarios": [
+    {
+      "status": "fulfilled",
+      "description": "Order completed and shipped",
+      "probability": 0.7
+    },
+    {
+      "status": "unfulfilled", 
+      "description": "Order pending fulfillment",
+      "probability": 0.2
+    },
+    {
+      "status": "partial",
+      "description": "Order partially fulfilled",
+      "probability": 0.1
+    }
+  ]
+}

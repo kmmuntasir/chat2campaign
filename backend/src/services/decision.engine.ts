@@ -1,6 +1,7 @@
 import { CampaignRecommendation, CampaignChannelPlan, SimulationConfig } from '../types/campaign';
 import { CampaignGenerator } from './campaign.generator';
 import { DataSourcesService } from './datasources.service';
+import { MockDataGenerator, MockEvent, MockDataConfig } from './mock-data.generator';
 
 // Event signal interfaces for type safety
 export interface EventSignal {
@@ -42,11 +43,13 @@ export interface DecisionRules {
 export class DecisionEngine {
   private campaignGenerator: CampaignGenerator;
   private dataSourcesService: DataSourcesService;
+  private mockDataGenerator: MockDataGenerator;
   private rules: DecisionRules;
 
   constructor(dataSourcesService: DataSourcesService) {
     this.campaignGenerator = new CampaignGenerator();
     this.dataSourcesService = dataSourcesService;
+    this.mockDataGenerator = new MockDataGenerator();
     this.initializeDefaultRules();
   }
 
@@ -118,21 +121,44 @@ export class DecisionEngine {
   }
 
   /**
-   * Generates mocked signals for development/testing
+   * Generates mocked signals for development/testing using comprehensive MockDataGenerator
    */
   private async generateMockedSignals(sourceId: string, source: any): Promise<EventSignal[]> {
-    const signalTemplates = this.getMockedSignalTemplates(sourceId);
-    const signalCount = Math.floor(Math.random() * 3) + 1; // 1-3 signals per source
-    
-    return signalTemplates.slice(0, signalCount).map(template => ({
-      id: this.generateId(),
-      source: sourceId,
-      type: template.type,
-      timestamp: new Date(Date.now() - Math.random() * 3600000).toISOString(), // Within last hour
-      data: template.data,
-      weight: template.weight,
-      confidence: Math.random() * 0.4 + 0.6 // 0.6-1.0
-    }));
+    try {
+      const mockConfig: MockDataConfig = {
+        sourceId: sourceId,
+        eventCount: Math.floor(Math.random() * 5) + 1, // 1-5 events per source
+        timeSpanHours: 24, // Last 24 hours
+        includeHistoricalData: false
+      };
+      
+      const mockEvents = this.mockDataGenerator.generateMockEvents(mockConfig);
+      
+      // Convert MockEvents to EventSignals
+      return mockEvents.map(event => {
+        const weight = this.calculateEventWeight(event.eventType, sourceId);
+        const confidence = event.metadata?.confidence_score || (0.6 + Math.random() * 0.4);
+        
+        return {
+          id: event.id,
+          source: event.source,
+          type: event.eventType,
+          timestamp: event.timestamp,
+          data: {
+            ...event.data,
+            userId: event.userId,
+            sessionId: event.sessionId,
+            metadata: event.metadata
+          },
+          weight: weight,
+          confidence: confidence
+        };
+      });
+    } catch (error) {
+      console.error(`Error generating mocked signals for ${sourceId}:`, error);
+      // Fallback to simple signal generation
+      return this.generateFallbackSignals(sourceId);
+    }
   }
 
   /**
@@ -537,6 +563,55 @@ export class DecisionEngine {
 
   private generateId(): string {
     return `de_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  /**
+   * Calculate event weight based on event type and source
+   */
+  private calculateEventWeight(eventType: string, sourceId: string): number {
+    // High-impact events get higher weights
+    const highImpactEvents = [
+      'cart_abandonment', 'order_created', 'conversion', 'purchase',
+      'checkout_start', 'payment_attempt', 'deal_updated', 'lead_created'
+    ];
+    
+    const mediumImpactEvents = [
+      'product_viewed', 'page_view', 'session_start', 'post_published',
+      'ad_click', 'pixel_fired', 'contact_created', 'activity_logged'
+    ];
+    
+    const lowImpactEvents = [
+      'impression', 'scroll_depth', 'follower_gained', 'page_view',
+      'inventory_updated', 'rating_updated'
+    ];
+    
+    if (highImpactEvents.includes(eventType)) {
+      return 0.8 + Math.random() * 0.2; // 0.8-1.0
+    } else if (mediumImpactEvents.includes(eventType)) {
+      return 0.5 + Math.random() * 0.3; // 0.5-0.8
+    } else if (lowImpactEvents.includes(eventType)) {
+      return 0.2 + Math.random() * 0.3; // 0.2-0.5
+    } else {
+      return 0.4 + Math.random() * 0.4; // 0.4-0.8 (default)
+    }
+  }
+
+  /**
+   * Generate fallback signals if MockDataGenerator fails
+   */
+  private generateFallbackSignals(sourceId: string): EventSignal[] {
+    const signalTemplates = this.getMockedSignalTemplates(sourceId);
+    const signalCount = Math.floor(Math.random() * 3) + 1;
+    
+    return signalTemplates.slice(0, signalCount).map(template => ({
+      id: this.generateId(),
+      source: sourceId,
+      type: template.type,
+      timestamp: new Date(Date.now() - Math.random() * 3600000).toISOString(),
+      data: template.data,
+      weight: template.weight,
+      confidence: Math.random() * 0.4 + 0.6
+    }));
   }
 
   // Public methods for configuration management

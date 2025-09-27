@@ -50,7 +50,7 @@
 - [x] Implement Configurable Rules to Prioritize Channels and Messages ([CTOC-0032][BE] - docs/tasks_list/08_decision_engine_development.md)
 
 ### 7. Data Source Integration (Mocked Data)
-- [ ] Implement Local JSON/Generator for Mocked Events ([CTOC-0033][BE] - docs/tasks_list/09_data_source_integration_mocked_data.md)
+- [x] Implement Local JSON/Generator for Mocked Events ([CTOC-0033][BE] - docs/tasks_list/09_data_source_integration_mocked_data.md)
 
 ### 8. Data Source Integration (Real API)
 - [ ] Implement Configurable API Endpoints for Fetching ([CTOC-0034][BE] - docs/tasks_list/10_data_source_integration_real_api.md)

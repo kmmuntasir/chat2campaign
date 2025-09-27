@@ -349,3 +349,75 @@
 - Performance monitoring and processing time tracking
 - Graceful fallback to basic campaign generation
 **Reason for update:** Decision Engine Development section complete - production-ready intelligent campaign recommendation system with advanced signal processing, AI enhancement capabilities, and configurable rule-based decision making.
+
+### 2025-09-27 01:11:37
+**Tasks:** [CTOC-0033]: Data Source Integration (Mocked Data)
+**Description:** Implemented comprehensive mock data generation system with realistic event simulation for all 10 data sources. Created advanced MockDataGenerator with detailed templates, user pools, product catalogs, and API endpoints for development and testing purposes.
+**Tasks Completed:**
+- ✓ [CTOC-0033] Implement Local JSON/Generator for Mocked Events - Comprehensive mock data generation system
+**Files Created:**
+- backend/src/services/mock-data.generator.ts (comprehensive mock data generation service with 970+ lines)
+- backend/src/data/mock-templates/website-events.json (detailed website analytics event templates)
+- backend/src/data/mock-templates/shopify-events.json (e-commerce event templates and product catalog)
+**Files Modified:**
+- backend/src/services/decision.engine.ts (integrated MockDataGenerator, enhanced signal generation with realistic data)
+- backend/src/index.ts (added MockDataGenerator initialization and comprehensive API endpoints)
+- docs/todo.md (marked Data Source Integration (Mocked Data) task as completed)
+**MockDataGenerator Features:**
+- ✅ Comprehensive event generation for all 10 data sources (Website, Shopify, Facebook, Google, CRM, etc.)
+- ✅ Realistic user pool management with 1000 users and consistent customer data
+- ✅ Product catalog with 10 sample products across multiple categories
+- ✅ Session management with 5000+ unique session identifiers
+- ✅ Customer data correlation with tiers, registration dates, and lifetime values
+- ✅ Advanced timestamp generation with configurable time spans
+- ✅ Weighted event generation based on real-world probabilities
+- ✅ Cross-platform data consistency and referential integrity
+**Data Source Coverage:**
+- ✅ Website Analytics: Page views, cart abandonment, conversions, session tracking
+- ✅ Shopify E-commerce: Orders, customers, products, inventory updates
+- ✅ Facebook Page: Posts, comments, messages, follower engagement
+- ✅ Google Tag Manager: Custom events, enhanced e-commerce, goal completions
+- ✅ Google Ads: Ad clicks, conversions, impressions, keyword performance
+- ✅ Facebook Pixel: Pixel fires, conversions, audience matching
+- ✅ CRM System: Contacts, deals, activities, lifecycle changes
+- ✅ Twitter: Tweets, mentions, followers, engagement events
+- ✅ Review Sites: Reviews, ratings, sentiment analysis
+- ✅ Ad Managers: Campaign performance, budget alerts, audience insights
+**Realistic Data Features:**
+- Consistent user journeys across multiple touchpoints
+- Realistic e-commerce scenarios with cart abandonment and order flows
+- Social media engagement patterns with sentiment analysis
+- Advertising performance data with realistic CTR and conversion rates
+- CRM lifecycle progression with lead scoring and deal stages
+- Review and rating distributions matching real-world patterns
+**API Endpoints Added:**
+- GET /api/mock-data/generate/:sourceId - Generate mock events for specific data source
+- POST /api/mock-data/batch-generate - Generate mock data for multiple sources simultaneously
+- GET /api/mock-data/sample/:sourceId/:eventType - Get sample events filtered by type
+**Decision Engine Integration:**
+- Enhanced signal generation using comprehensive MockDataGenerator
+- Improved event weight calculation based on realistic event types
+- Fallback mechanisms for robust error handling
+- Consistent data quality scoring and confidence metrics
+- Cross-source event correlation and user journey tracking
+**JSON Templates and Documentation:**
+- Structured JSON templates for website and e-commerce events
+- Event frequency and weight specifications
+- Sample data for development reference
+- Product categories and fulfillment scenarios
+- User segmentation and behavioral patterns
+**Development and Testing Features:**
+- Configurable event counts and time spans
+- Historical data generation capabilities
+- Event type filtering and sampling
+- Batch processing for multiple data sources
+- Comprehensive error handling and logging
+**Quality and Consistency:**
+- Realistic data relationships and dependencies
+- Proper timestamp sequencing and correlation
+- Consistent user and session tracking across events
+- Realistic probability distributions for all generated data
+- Comprehensive metadata for data quality assessment
+**Reason for update:** Data Source Integration (Mocked Data) section complete - production-ready mock data generation system providing realistic, consistent, and comprehensive event simulation across all supported data sources for development, testing, and demonstration purposes.
+
+**Ready for commit:** All changes for Data Source Integration (Mocked Data) section complete and ready for version control.

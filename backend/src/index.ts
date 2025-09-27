@@ -7,6 +7,7 @@ import { WebSocketService } from './services/websocket.service';
 import { StreamingService } from './services/streaming.service';
 import { DataSourcesService } from './services/datasources.service';
 import { DecisionEngine } from './services/decision.engine';
+import { MockDataGenerator } from './services/mock-data.generator';
 
 // Load environment variables
 dotenv.config();
@@ -27,6 +28,7 @@ const wss = new WebSocketServer({ server });
 // Initialize services
 const wsService = new WebSocketService();
 const dataSourcesService = new DataSourcesService();
+const mockDataGenerator = new MockDataGenerator();
 const decisionEngine = new DecisionEngine(dataSourcesService);
 const streamingService = new StreamingService(wsService, dataSourcesService);
 
@@ -276,6 +278,92 @@ app.post('/api/sources/set-global-type', (req, res) => {
   } catch (error) {
     console.error('Error setting global type:', error);
     res.status(500).json({ error: 'Failed to set global type' });
+  }
+});
+
+// Mock Data endpoints
+app.get('/api/mock-data/generate/:sourceId', (req, res) => {
+  try {
+    const { sourceId } = req.params;
+    const { eventCount, timeSpanHours } = req.query;
+    
+    const config = {
+      sourceId: sourceId,
+      eventCount: eventCount ? parseInt(eventCount as string) : undefined,
+      timeSpanHours: timeSpanHours ? parseInt(timeSpanHours as string) : undefined
+    };
+    
+    const mockEvents = mockDataGenerator.generateMockEvents(config);
+    
+    res.json({
+      message: `Generated ${mockEvents.length} mock events for ${sourceId}`,
+      sourceId: sourceId,
+      eventCount: mockEvents.length,
+      events: mockEvents
+    });
+  } catch (error) {
+    console.error('Error generating mock data:', error);
+    res.status(500).json({ error: 'Failed to generate mock data' });
+  }
+});
+
+app.post('/api/mock-data/batch-generate', (req, res) => {
+  try {
+    const { sources } = req.body;
+    
+    if (!sources || !Array.isArray(sources)) {
+      return res.status(400).json({ error: 'sources array is required' });
+    }
+    
+    const results: any = {};
+    let totalEvents = 0;
+    
+    for (const sourceConfig of sources) {
+      const events = mockDataGenerator.generateMockEvents(sourceConfig);
+      results[sourceConfig.sourceId] = events;
+      totalEvents += events.length;
+    }
+    
+    res.json({
+      message: `Generated mock data for ${sources.length} sources`,
+      totalEvents: totalEvents,
+      sources: Object.keys(results),
+      data: results
+    });
+  } catch (error) {
+    console.error('Error generating batch mock data:', error);
+    res.status(500).json({ error: 'Failed to generate batch mock data' });
+  }
+});
+
+app.get('/api/mock-data/sample/:sourceId/:eventType', (req, res) => {
+  try {
+    const { sourceId, eventType } = req.params;
+    
+    // Generate a single event and filter by type if specified
+    const config = { sourceId: sourceId, eventCount: 10 };
+    const events = mockDataGenerator.generateMockEvents(config);
+    
+    const filteredEvents = events.filter(event => 
+      eventType === 'all' || event.eventType === eventType
+    );
+    
+    if (filteredEvents.length === 0) {
+      return res.status(404).json({ 
+        error: `No events found for ${sourceId} with eventType ${eventType}` 
+      });
+    }
+    
+    res.json({
+      message: `Sample ${eventType} event from ${sourceId}`,
+      sourceId: sourceId,
+      eventType: eventType,
+      sample: filteredEvents[0],
+      availableEvents: events.map(e => e.eventType).filter((v, i, a) => a.indexOf(v) === i)
+    });
+  } catch (error) {
+    console.error('Error generating sample mock data:', error);
+    res.status(500).json({ error: 'Failed to generate sample mock data' });
   }
 });
 
