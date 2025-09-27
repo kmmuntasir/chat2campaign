@@ -27,16 +27,16 @@ html, body {
 }
 
 .chat-section {
-  flex: 1;
+  width: 45%;
+  min-width: 400px;
+  max-width: 600px;
   padding: 20px;
   display: flex;
   flex-direction: column;
 }
 
 .controls-section {
-  width: 520px;
-  min-width: 450px;
-  max-width: 650px;
+  flex: 1;
   background: white;
   border-left: 1px solid #dee2e6;
   display: flex;
@@ -49,6 +49,14 @@ html, body {
   padding: 20px;
   height: 100%;
   overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  grid-template-areas: 
+    "header header"
+    "sources channels"
+    "status campaign"
+    "debug debug";
 }
 
 .controls-panel h3 {
@@ -58,6 +66,68 @@ html, body {
   font-weight: 600;
   border-bottom: 2px solid #e9ecef;
   padding-bottom: 10px;
+  grid-area: header;
+}
+
+.controls-header {
+  grid-area: header;
+}
+
+.sources-panel {
+  grid-area: sources;
+  display: flex;
+  flex-direction: column;
+}
+
+.channels-panel {
+  grid-area: channels;
+  display: flex;
+  flex-direction: column;
+}
+
+.status-panel {
+  grid-area: status;
+  display: flex;
+  flex-direction: column;
+}
+
+.campaign-panel {
+  grid-area: campaign;
+  display: flex;
+  flex-direction: column;
+}
+
+.debug-panel {
+  grid-area: debug;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Panel Section Styling */
+.sources-panel, .channels-panel, .status-panel, .campaign-panel {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sources-panel h4, .channels-panel h4, .status-panel h4, .campaign-panel h4 {
+  margin: 0 0 12px 0;
+  color: #495057;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 8px;
+}
+
+.debug-panel {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
 }
 
 .controls-panel h4 {
@@ -70,21 +140,28 @@ html, body {
 }
 
 .data-source-section {
-  margin-bottom: 20px;
-  max-height: 350px;
+  margin: 0;
+  max-height: 300px;
   overflow-y: auto;
 }
 
 .data-source-section .data-source-selector {
   box-shadow: none;
-  border: 1px solid #e9ecef;
-  padding: 16px;
+  border: none;
+  padding: 0;
+  background: transparent;
 }
 
 .channel-section {
-  margin-bottom: 20px;
+  margin: 0;
   max-height: 280px;
   overflow-y: auto;
+}
+
+.channel-section .channel-selector {
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 
 .status-section {
@@ -256,23 +333,32 @@ html, body {
   }
   
   .chat-section {
-    flex: 1;
-    min-height: 500px;
-  }
-  
-  .controls-section {
     width: 100%;
     min-width: unset;
     max-width: unset;
-    height: auto;
+    height: 50vh;
+    min-height: 400px;
+  }
+  
+  .controls-section {
+    flex: 1;
     border-left: none;
     border-top: 1px solid #dee2e6;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   }
   
   .controls-panel {
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      "header"
+      "sources"
+      "channels"
+      "status"
+      "campaign"
+      "debug";
+    gap: 16px;
     height: auto;
-    max-height: 400px;
+    max-height: 50vh;
   }
 }
 
