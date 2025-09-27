@@ -81,7 +81,8 @@
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   font-size: 14px;
-  background: white;
+  background: #ffffff;
+  color: #495057;
   cursor: pointer;
   transition: border-color 0.2s ease;
   min-width: 150px;
@@ -90,10 +91,12 @@
 .category-select:focus, .sort-select:focus {
   outline: none;
   border-color: #6f42c1;
+  background: #ffffff;
 }
 
 .category-select:disabled, .sort-select:disabled {
-  background: #f5f5f5;
+  background: #f8f9fa;
+  color: #6c757d;
   cursor: not-allowed;
 }
 
