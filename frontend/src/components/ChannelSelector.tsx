@@ -292,8 +292,8 @@ export const ChannelSelector: React.FC<ChannelSelectorProps> = ({
                     }}
                     className="remove-button"
                     disabled={disabled}
+                    aria-label="Remove channel"
                   >
-                    ×
                   </button>
                 </div>
               ) : null;

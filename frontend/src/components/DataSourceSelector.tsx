@@ -250,8 +250,8 @@ export const DataSourceSelector: React.FC<DataSourceSelectorProps> = ({
                     }}
                     className="remove-button"
                     disabled={disabled}
+                    aria-label="Remove source"
                   >
-                    ×
                   </button>
                 </div>
               ) : null;

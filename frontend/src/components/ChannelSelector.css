@@ -342,20 +342,47 @@
   background: #e74c3c;
   color: white;
   border: none;
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
-  min-height: 20px;
-  border-radius: 50%;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
+  border-radius: 50% !important;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
   transition: all 0.2s ease;
   flex-shrink: 0;
-  aspect-ratio: 1;
+  aspect-ratio: 1 / 1;
+  line-height: 1;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-align: center;
+  vertical-align: middle;
+  position: relative;
+}
+
+.remove-button::before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 2px;
+  background: white;
+  transform: rotate(45deg);
+}
+
+.remove-button::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 2px;
+  background: white;
+  transform: rotate(-45deg);
 }
 
 .remove-button:hover:not(:disabled) {

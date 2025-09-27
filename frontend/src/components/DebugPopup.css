@@ -93,25 +93,57 @@
 .debug-popup-close {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 20px;
   color: #6c757d;
   cursor: pointer;
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  min-height: 32px;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: 50% !important;
   transition: all 0.2s ease;
   flex-shrink: 0;
-  aspect-ratio: 1;
+  aspect-ratio: 1 / 1;
+  line-height: 1;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-align: center;
+  vertical-align: middle;
+  position: relative;
+}
+
+.debug-popup-close::before {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 2px;
+  background: #6c757d;
+  transform: rotate(45deg);
+}
+
+.debug-popup-close::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 2px;
+  background: #6c757d;
+  transform: rotate(-45deg);
 }
 
 .debug-popup-close:hover {
   background: #f8f9fa;
   color: #495057;
+}
+
+.debug-popup-close:hover::before,
+.debug-popup-close:hover::after {
+  background: #495057;
 }
 
 /* Debug Popup Content */

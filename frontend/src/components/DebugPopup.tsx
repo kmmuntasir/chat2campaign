@@ -52,8 +52,7 @@ export const DebugPopup: React.FC<DebugPopupProps> = ({
           <div className="debug-popup-container" onClick={(e) => e.stopPropagation()}>
             <div className="debug-popup-header">
               <h3>Debug Information</h3>
-              <button className="debug-popup-close" onClick={closePopup}>
-                ✕
+              <button className="debug-popup-close" onClick={closePopup} aria-label="Close debug popup">
               </button>
             </div>
 

@@ -127,7 +127,7 @@ export const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
       <div className="configuration-panel">
         <div className="config-header">
           <h2>🔧 Data Source Configuration</h2>
-          <button className="close-btn" onClick={onClose}>✕</button>
+          <button className="close-btn" onClick={onClose} aria-label="Close configuration"></button>
         </div>
 
         <div className="config-content">
