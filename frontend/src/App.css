@@ -59,7 +59,7 @@ html, body {
     "header header"
     "sources channels"
     "connection campaign";
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 60vh auto;
   align-content: start;
 }
 
@@ -320,7 +320,7 @@ html, body {
       "header header"
       "sources channels"
       "connection campaign";
-    grid-template-rows: 60px minmax(350px, 1fr) 200px;
+    grid-template-rows: auto 70vh auto;
   }
 }
 
@@ -362,7 +362,7 @@ html, body {
     gap: 12px;
     height: auto;
     max-height: 55vh;
-    grid-template-rows: 60px minmax(250px, 1fr) minmax(250px, 1fr) 180px 120px;
+    grid-template-rows: auto 35vh 35vh auto auto;
   }
 }
 
