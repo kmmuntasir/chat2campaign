@@ -122,7 +122,7 @@
   background: #fafafa;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
-  padding: 10px;
+  padding: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
@@ -130,8 +130,9 @@
   box-sizing: border-box;
   overflow: visible;
   display: flex;
-  flex-direction: column;
-  height: auto;
+  flex-direction: row;
+  align-items: flex-start;
+  min-height: 55px;
 }
 
 .channel-card:hover:not(.disabled) {
@@ -159,50 +160,72 @@
 
 .channel-header {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 8px;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .channel-icon {
-  font-size: 22px;
+  font-size: 18px;
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(111, 66, 193, 0.1);
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .channel-info {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 2px;
 }
 
 .channel-name {
-  margin: 0 0 3px 0;
-  font-size: 14px;
+  margin: 0 0 4px 0;
+  font-size: 13px;
   font-weight: 600;
   color: #2c3e50;
+  line-height: 1.2;
 }
 
 .channel-category {
-  padding: 2px 8px;
+  padding: 2px 6px;
   background: #ecf0f1;
   color: #666;
-  border-radius: 12px;
-  font-size: 11px;
+  border-radius: 8px;
+  font-size: 10px;
   font-weight: 500;
   display: inline-block;
+  margin-bottom: 4px;
 }
 
+.channel-description {
+  margin: 0;
+  font-size: 11px;
+  color: #666;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+
 .selection-indicator {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  margin-left: 8px;
 }
 
 .checkmark {
@@ -218,21 +241,7 @@
   font-weight: bold;
 }
 
-.channel-description {
-  margin: 0 0 8px 0;
-  font-size: 12px;
-  color: #666;
-  line-height: 1.4;
-}
 
-.channel-metrics {
-  display: flex;
-  justify-content: space-between;
-  margin: 6px 0;
-  padding: 6px 0;
-  border-top: 1px solid #e9ecef;
-  border-bottom: 1px solid #e9ecef;
-}
 
 .metric {
   display: flex;
@@ -261,8 +270,11 @@
 .channel-capabilities {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 8px;
+  gap: 3px;
+  margin-left: 8px;
+  flex-shrink: 0;
+  max-width: 140px;
+  align-items: center;
 }
 
 .capability-tag {
