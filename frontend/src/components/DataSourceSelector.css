@@ -55,9 +55,9 @@
 
 .selector-controls {
   display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
-  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .search-bar {
@@ -66,10 +66,10 @@
 
 .search-input {
   width: 100%;
-  padding: 10px 16px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 13px;
   background: #ffffff;
   color: #495057;
   transition: border-color 0.2s ease;
@@ -88,15 +88,15 @@
 }
 
 .category-filter {
-  min-width: 200px;
+  width: 100%;
 }
 
 .category-select {
   width: 100%;
-  padding: 10px 12px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 13px;
   background: white;
   cursor: pointer;
   transition: border-color 0.2s ease;
@@ -115,19 +115,22 @@
 .sources-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
+  gap: 10px;
   margin-bottom: 16px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .source-card {
   background: #fafafa;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  min-height: 80px;
+  min-height: 70px;
 }
 
 .source-card:hover:not(.disabled) {
@@ -140,7 +143,7 @@
 .source-card.selected {
   border-color: #6f42c1;
   background: linear-gradient(135deg, #f8f9ff 0%, #e8f4fd 100%);
-  box-shadow: 0 4px 12px rgba(111, 66, 193, 0.2);
+  box-shadow: 0 2px 8px rgba(111, 66, 193, 0.2);
 }
 
 .source-card.disabled {
@@ -156,20 +159,20 @@
 .source-header {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
 .source-icon {
-  font-size: 24px;
+  font-size: 20px;
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(111, 66, 193, 0.1);
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .source-info {
@@ -177,8 +180,8 @@
 }
 
 .source-name {
-  margin: 0 0 4px 0;
-  font-size: 16px;
+  margin: 0 0 3px 0;
+  font-size: 14px;
   font-weight: 600;
   color: #2c3e50;
 }

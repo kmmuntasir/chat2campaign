@@ -50,15 +50,15 @@ html, body {
 .controls-panel {
   padding: 16px;
   height: 100%;
-  overflow-y: auto;
+  overflow: hidden;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
   grid-template-areas: 
-    "header header header"
-    "sources channels connection"
-    "campaign campaign campaign";
-  grid-template-rows: auto 1fr auto;
+    "header header"
+    "sources channels"
+    "connection campaign";
+  grid-template-rows: auto 2fr 1fr;
 }
 
 .controls-panel h3 {
@@ -100,7 +100,7 @@ html, body {
 }
 
 /* Panel Section Styling */
-.sources-panel, .channels-panel, .connection-panel, .campaign-panel {
+.sources-panel, .channels-panel {
   background: #ffffff;
   border: 1px solid #dee2e6;
   border-radius: 8px;
@@ -108,6 +108,20 @@ html, body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   color: #495057;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
+}
+
+.connection-panel, .campaign-panel {
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  color: #495057;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -139,6 +153,8 @@ html, body {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .data-source-section .data-source-selector {
@@ -153,6 +169,8 @@ html, body {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .channel-section .channel-selector {
@@ -278,7 +296,7 @@ html, body {
       "header header"
       "sources channels"
       "connection campaign";
-    grid-template-rows: auto 1fr 1fr;
+    grid-template-rows: auto 2fr 1fr;
   }
 }
 
@@ -319,7 +337,8 @@ html, body {
       "campaign";
     gap: 12px;
     height: auto;
-    max-height: 50vh;
+    max-height: 55vh;
+    grid-template-rows: auto 1fr 1fr auto auto;
   }
 }
 
