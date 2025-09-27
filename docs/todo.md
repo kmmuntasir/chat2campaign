@@ -1,9 +1,9 @@
 # Project Todo List
 
 ## I. Project Setup & Infrastructure
-- [ ] Initialize Project Repository ([CTOC-0001][DevOps] - docs/tasks_list/01_project_setup_infrastructure.md)
-- [ ] Setup Frontend Project with React, Vite, TypeScript ([CTOC-0002][DevOps] - docs/tasks_list/01_project_setup_infrastructure.md)
-- [ ] Setup Backend Project with Node.js and Express ([CTOC-0003][DevOps] - docs/tasks_list/01_project_setup_infrastructure.md)
+- [x] Initialize Project Repository ([CTOC-0001][DevOps] - docs/tasks_list/01_project_setup_infrastructure.md)
+- [x] Setup Frontend Project with React, Vite, TypeScript ([CTOC-0002][DevOps] - docs/tasks_list/01_project_setup_infrastructure.md)
+- [x] Setup Backend Project with Node.js and Express ([CTOC-0003][DevOps] - docs/tasks_list/01_project_setup_infrastructure.md)
 
 ## II. Deployment & CI/CD
 - [ ] Local Development Environment Setup ([CTOC-0005][DevOps] - docs/tasks_list/02_deployment_ci_cd.md)

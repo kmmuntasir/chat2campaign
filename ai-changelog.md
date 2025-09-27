@@ -30,3 +30,14 @@
 - backend/src/index.ts
 - backend/.env.example
 **Reason for update:** Backend infrastructure setup with Node.js, Express, WebSocket, and TypeScript.
+
+### 2025-09-27 00:00:21
+**Section Complete:** Project Setup & Infrastructure
+**Description:** Successfully completed all tasks in the "I. Project Setup & Infrastructure" section of the todo.md file.
+**Tasks Completed:**
+- [CTOC-0001] Initialize Project Repository ✓
+- [CTOC-0002] Setup Frontend Project with React, Vite, TypeScript ✓
+- [CTOC-0003] Setup Backend Project with Node.js and Express ✓
+**Files Modified:**
+- docs/todo.md (updated checkboxes)
+**Reason for update:** Marking project setup section as complete and updating documentation.
