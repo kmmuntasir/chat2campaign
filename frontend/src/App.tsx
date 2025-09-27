@@ -6,6 +6,7 @@ import type { ChatMessageData } from './components/ChatMessage'
 import { DataSourceSelector } from './components/DataSourceSelector'
 import { ChannelSelector } from './components/ChannelSelector'
 import { ConfigurationPanel } from './components/ConfigurationPanel'
+import { DebugPopup } from './components/DebugPopup'
 
 function App() {
   const [backendStatus, setBackendStatus] = useState<string>('Checking...')
@@ -359,27 +360,25 @@ Config: ${JSON.stringify(configResult.data, null, 2)}`)
               />
             </div>
             
-            <div className="status-panel">
-              <div className="status-section">
-                <h4>Connection Status</h4>
-                <div className="status-item">
-                  <strong>Backend:</strong> {backendStatus}
-                </div>
-                <div className="status-item">
-                  <strong>WebSocket:</strong> {wsStatus}
-                </div>
-                <div className="status-item">
-                  <strong>Selected Sources:</strong> {selectedSources.length}/3
-                </div>
-                <div className="status-item">
-                  <strong>Selected Channels:</strong> {selectedChannels.length}/4
-                </div>
-                <div className="status-item">
-                  <strong>Simulation:</strong> {isSimulationRunning ? 
-                    <span style={{color: '#28a745'}}>🟢 Running {sessionId && `(${sessionId})`}</span> : 
-                    <span style={{color: '#6c757d'}}>⚫ Stopped</span>
-                  }
-                </div>
+            <div className="connection-panel">
+              <h4>Connection & Status</h4>
+              <div className="status-item">
+                <strong>Backend:</strong> {backendStatus}
+              </div>
+              <div className="status-item">
+                <strong>WebSocket:</strong> {wsStatus}
+              </div>
+              <div className="status-item">
+                <strong>Sources:</strong> {selectedSources.length}/3
+              </div>
+              <div className="status-item">
+                <strong>Channels:</strong> {selectedChannels.length}/4
+              </div>
+              <div className="status-item">
+                <strong>Simulation:</strong> {isSimulationRunning ? 
+                  <span style={{color: '#28a745'}}>🟢 Running {sessionId && `(${sessionId.slice(0,8)}...)`}</span> : 
+                  <span style={{color: '#6c757d'}}>⚫ Stopped</span>
+                }
               </div>
               
               <div className="button-group">
@@ -388,9 +387,6 @@ Config: ${JSON.stringify(configResult.data, null, 2)}`)
                 </button>
                 <button onClick={testWebSocket} className="control-btn primary">
                   Connect WebSocket
-                </button>
-                <button onClick={testApiEndpoints} className="control-btn secondary">
-                  Test API
                 </button>
                 <button onClick={openConfigPanel} className="control-btn secondary">
                   🔧 Configuration
@@ -427,26 +423,6 @@ Config: ${JSON.stringify(configResult.data, null, 2)}`)
               </div>
             </div>
 
-            <div className="debug-panel">
-              <div className="debug-section">
-                <h4>Debug Information</h4>
-                <div className="debug-response">
-                  <pre>{apiResponse || 'No API response yet'}</pre>
-                </div>
-              </div>
-              
-              <div className="help-text">
-                <p><strong>Quick Start:</strong></p>
-                <ol>
-                  <li>Select up to 3 data sources</li>
-                  <li>Select up to 4 communication channels</li>
-                  <li>Click "Test Backend" to verify connection</li>
-                  <li>Click "Connect WebSocket" for real-time communication</li>
-                  <li>Click "Start Campaign Simulation" to begin streaming</li>
-                  <li>Monitor recommendations in the chat interface</li>
-                </ol>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -455,6 +431,19 @@ Config: ${JSON.stringify(configResult.data, null, 2)}`)
         isVisible={showConfigPanel}
         onClose={closeConfigPanel}
         onConfigUpdate={handleConfigUpdate}
+      />
+      
+      <DebugPopup 
+        apiResponse={apiResponse}
+        backendStatus={backendStatus}
+        wsStatus={wsStatus}
+        isConnected={isConnected}
+        selectedSources={selectedSources}
+        selectedChannels={selectedChannels}
+        isSimulationRunning={isSimulationRunning}
+        sessionId={sessionId}
+        onTestBackend={testBackendConnection}
+        onTestApi={testApiEndpoints}
       />
     </div>
   )
