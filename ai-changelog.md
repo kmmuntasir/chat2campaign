@@ -41,3 +41,10 @@
 **Files Modified:**
 - docs/todo.md (updated checkboxes)
 **Reason for update:** Marking project setup section as complete and updating documentation.
+
+### 2025-09-27 00:17:08
+**Task:** Update Deployment & CI/CD Section
+**Description:** Updated todo.md to skip deployment tasks (GitHub Pages, Render/Heroku, CI/CD pipeline) as these will be handled with GitHub Actions later. Only keeping Local Development Environment Setup task active.
+**Files Modified:**
+- docs/todo.md (marked deployment tasks as skipped)
+**Reason for update:** Focus on local development setup first, defer deployment to GitHub Actions implementation later.
