@@ -47,6 +47,8 @@ export interface TransformedEvent {
     response_time: number;
     is_real_api: boolean;
     transformation_version: string;
+    // Allow additional properties for fallback and other metadata
+    [key: string]: any;
   };
 }
 
@@ -201,7 +203,7 @@ export class RealAPIService {
             accessToken: apiConfig.authToken,
             customHeaders: {
               'Authorization': `Bearer ${apiConfig.authToken}`,
-              'developer-token': process.env.GOOGLE_ADS_DEVELOPER_TOKEN
+              'developer-token': process.env.GOOGLE_ADS_DEVELOPER_TOKEN || 'not-configured'
             }
           }
         };

@@ -530,7 +530,7 @@ app.post('/api/real-api/test/:sourceId', async (req, res) => {
     res.json({
       message: `API connection test for ${sourceId}`,
       sourceId: sourceId,
-      ...testResult
+      test_result: testResult
     });
   } catch (error) {
     console.error(`Error testing API connection for ${req.params.sourceId}:`, error);

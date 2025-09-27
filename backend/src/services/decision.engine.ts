@@ -48,7 +48,7 @@ export class DecisionEngine {
   private mockDataGenerator: MockDataGenerator;
   private realAPIService: RealAPIService;
   private schemaValidator: SchemaValidatorService;
-  private rules: DecisionRules;
+  private rules!: DecisionRules;
 
   constructor(dataSourcesService: DataSourcesService) {
     this.campaignGenerator = new CampaignGenerator();
@@ -94,7 +94,7 @@ export class DecisionEngine {
       };
 
       // Step 6: Enhance with Groq AI (simulated for now)
-      const enhancedRecommendation = await this.enhanceWithGroqAI(recommendation, aggregated);
+      const enhancedRecommendation = await this.enhanceWithGroqAI(recommendation, aggregatedSignals);
       
       // Step 7: Validate schema compliance and sanitize if needed
       return this.validateAndEnsureSchemaCompliance(enhancedRecommendation);

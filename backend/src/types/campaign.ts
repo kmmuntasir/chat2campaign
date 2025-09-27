@@ -33,6 +33,7 @@ export interface CampaignMeta {
   source_snapshot: Record<string, any>;
   engine_version: string;
   confidence: number;
+  [key: string]: any; // Allow additional properties for AI enhancement
 }
 
 export interface CampaignRecommendation {
