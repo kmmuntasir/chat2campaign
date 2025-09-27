@@ -192,7 +192,7 @@ export const DataSourceSelector: React.FC<DataSourceSelectorProps> = ({
               className={`source-card ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`}
               onClick={() => handleSourceToggle(source.id)}
             >
-              <div className="source-header">
+              <div className="source-left">
                 <div className="source-icon">
                   {source.icon || '📊'}
                 </div>
@@ -200,36 +200,17 @@ export const DataSourceSelector: React.FC<DataSourceSelectorProps> = ({
                   <h4 className="source-name">{source.name}</h4>
                   <div className="source-meta">
                     <span className={`source-type ${source.type}`}>
-                      {source.type === 'mocked' ? '🔧 Mock' : '🔗 Real API'}
+                      {source.type === 'mocked' ? 'MOCK' : 'API'}
                     </span>
                     {source.category && (
                       <span className="source-category">{source.category}</span>
                     )}
                   </div>
                 </div>
-                <div className="selection-indicator">
-                  {isSelected && <span className="checkmark">✓</span>}
-                </div>
               </div>
-              
-              {source.description && (
-                <p className="source-description">{source.description}</p>
-              )}
-              
-              {source.capabilities && source.capabilities.length > 0 && (
-                <div className="source-capabilities">
-                  {source.capabilities.slice(0, 3).map(capability => (
-                    <span key={capability} className="capability-tag">
-                      {capability}
-                    </span>
-                  ))}
-                  {source.capabilities.length > 3 && (
-                    <span className="capability-more">
-                      +{source.capabilities.length - 3} more
-                    </span>
-                  )}
-                </div>
-              )}
+              <div className="selection-indicator">
+                {isSelected && <span className="checkmark">✓</span>}
+              </div>
             </div>
           );
         })}

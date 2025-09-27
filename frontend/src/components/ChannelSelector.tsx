@@ -268,7 +268,7 @@ export const ChannelSelector: React.FC<ChannelSelectorProps> = ({
               className={`channel-card ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`}
               onClick={() => handleChannelToggle(channel.id)}
             >
-              <div className="channel-header">
+              <div className="channel-left">
                 <div className="channel-icon">
                   {channel.icon}
                 </div>
@@ -278,54 +278,9 @@ export const ChannelSelector: React.FC<ChannelSelectorProps> = ({
                     {channel.category.charAt(0).toUpperCase() + channel.category.slice(1)}
                   </div>
                 </div>
-                <div className="selection-indicator">
-                  {isSelected && <span className="checkmark">✓</span>}
-                </div>
               </div>
-              
-              <p className="channel-description">{channel.description}</p>
-              
-              <div className="channel-metrics">
-                <div className="metric">
-                  <span className="metric-label">Speed:</span>
-                  <span 
-                    className="metric-value"
-                    style={{ color: getDeliverySpeedColor(channel.deliverySpeed) }}
-                  >
-                    {channel.deliverySpeed}
-                  </span>
-                </div>
-                <div className="metric">
-                  <span className="metric-label">Cost:</span>
-                  <span 
-                    className="metric-value"
-                    style={{ color: getCostLevelColor(channel.costLevel) }}
-                  >
-                    {channel.costLevel}
-                  </span>
-                </div>
-                <div className="metric">
-                  <span className="metric-label">Reach:</span>
-                  <span 
-                    className="metric-value"
-                    style={{ color: getReachPotentialColor(channel.reachPotential) }}
-                  >
-                    {channel.reachPotential.replace('_', ' ')}
-                  </span>
-                </div>
-              </div>
-              
-              <div className="channel-capabilities">
-                {channel.capabilities.slice(0, 3).map(capability => (
-                  <span key={capability} className="capability-tag">
-                    {capability.replace('_', ' ')}
-                  </span>
-                ))}
-                {channel.capabilities.length > 3 && (
-                  <span className="capability-more">
-                    +{channel.capabilities.length - 3} more
-                  </span>
-                )}
+              <div className="selection-indicator">
+                {isSelected && <span className="checkmark">✓</span>}
               </div>
             </div>
           );
