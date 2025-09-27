@@ -132,7 +132,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
   };
 
   // Enhanced JSON summary with validation info
-  const generateEnhancedJsonSummary = (jsonObj: any, validation: ValidationResult): string => {
+  const generateEnhancedJsonSummary = (jsonObj: any, _validation: ValidationResult): string => {
     try {
       const baseSummary = generateJsonSummary(jsonObj);
       

@@ -52,7 +52,7 @@ export const DataSourceSelector: React.FC<DataSourceSelectorProps> = ({
       setDataSources(sources);
       
       // Extract categories
-      const uniqueCategories = [...new Set(sources.map((s: DataSource) => s.category).filter(Boolean))];
+      const uniqueCategories = [...new Set(sources.map((s: DataSource) => s.category).filter(Boolean))] as string[];
       setCategories(uniqueCategories);
       
     } catch (err) {
