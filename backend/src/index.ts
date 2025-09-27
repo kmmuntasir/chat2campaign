@@ -414,6 +414,97 @@ app.post('/api/decision-engine/generate', async (req, res) => {
   }
 });
 
+// Schema Validation endpoints
+app.get('/api/schema/stats', (req, res) => {
+  try {
+    const stats = decisionEngine.getSchemaValidationStats();
+    res.json({
+      message: 'Schema validation statistics retrieved successfully',
+      validation_stats: stats
+    });
+  } catch (error) {
+    console.error('Error fetching schema validation stats:', error);
+    res.status(500).json({ error: 'Failed to fetch schema validation statistics' });
+  }
+});
+
+app.post('/api/schema/reset-stats', (req, res) => {
+  try {
+    decisionEngine.resetSchemaValidationStats();
+    res.json({ 
+      message: 'Schema validation statistics reset successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error resetting schema validation stats:', error);
+    res.status(500).json({ error: 'Failed to reset schema validation statistics' });
+  }
+});
+
+app.post('/api/schema/validate', (req, res) => {
+  try {
+    const { recommendation } = req.body;
+    if (!recommendation) {
+      return res.status(400).json({
+        error: 'Missing recommendation in request body',
+        expected: 'JSON object with recommendation field containing campaign recommendation data'
+      });
+    }
+    
+    const validationResult = decisionEngine.validateRecommendation(recommendation);
+    res.json({
+      message: 'Schema validation completed',
+      validation: validationResult
+    });
+  } catch (error) {
+    console.error('Error validating recommendation schema:', error);
+    res.status(500).json({
+      error: 'Schema validation failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
+app.post('/api/schema/validate-batch', (req, res) => {
+  try {
+    const { recommendations } = req.body;
+    if (!Array.isArray(recommendations)) {
+      return res.status(400).json({
+        error: 'Missing or invalid recommendations array in request body',
+        expected: 'JSON object with recommendations field containing array of campaign recommendations'
+      });
+    }
+    
+    const batchResult = decisionEngine.validateRecommendationBatch(recommendations);
+    res.json({
+      message: `Batch schema validation completed for ${recommendations.length} recommendations`,
+      batch_validation: batchResult
+    });
+  } catch (error) {
+    console.error('Error validating recommendation batch:', error);
+    res.status(500).json({
+      error: 'Batch schema validation failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
+app.get('/api/schema/sample', (req, res) => {
+  try {
+    const sampleRecommendation = decisionEngine.generateSampleValidRecommendation();
+    res.json({
+      message: 'Sample valid recommendation generated successfully',
+      sample_recommendation: sampleRecommendation
+    });
+  } catch (error) {
+    console.error('Error generating sample recommendation:', error);
+    res.status(500).json({
+      error: 'Failed to generate sample recommendation',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
 // Real API Integration endpoints
 app.get('/api/real-api/health', (req, res) => {
   try {

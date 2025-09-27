@@ -57,8 +57,8 @@
 - [x] Implement Graceful Fallback to Mock Data if Real API Unavailable ([CTOC-0035][BE] - docs/tasks_list/10_data_source_integration_real_api.md)
 
 ### 9. JSON Output Schema Adherence
-- [ ] Ensure Decision Engine Generates Schema-Compliant JSON ([CTOC-0036][BE] - docs/tasks_list/11_json_output_schema_adherence.md)
-- [ ] Ensure Frontend Can Parse and Display Schema-Compliant JSON ([CTOC-0037][FE] - docs/tasks_list/11_json_output_schema_adherence.md)
+- [x] Ensure Decision Engine Generates Schema-Compliant JSON ([CTOC-0036][BE] - docs/tasks_list/11_json_output_schema_adherence.md)
+- [x] Ensure Frontend Can Parse and Display Schema-Compliant JSON ([CTOC-0037][FE] - docs/tasks_list/11_json_output_schema_adherence.md)
 
 ### 10. Initial Project Setup & Documentation
 - [ ] Create Comprehensive README ([CTOC-0038][Gen] - docs/tasks_list/12_initial_project_setup_documentation.md)

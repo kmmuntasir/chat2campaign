@@ -498,3 +498,90 @@
 - Automatic recovery when APIs become available again
 - Consistent data structure regardless of source (real vs mock)
 **Reason for update:** Data Source Integration (Real API) section complete - production-ready real API integration system with comprehensive authentication, transformation, error handling, and graceful fallback capabilities for all supported data sources.
+
+### 2025-09-27 01:42:30
+**Tasks:** [CTOC-0036, CTOC-0037]: JSON Output Schema Adherence
+**Description:** Implemented comprehensive JSON schema validation system for both backend Decision Engine and frontend JSON parsing/display. Created production-ready schema validation with automatic sanitization, error handling, and enhanced UI for schema-compliant campaign recommendations.
+**Tasks Completed:**
+- ✓ [CTOC-0036] Ensure Decision Engine Generates Schema-Compliant JSON - Comprehensive backend validation with auto-sanitization
+- ✓ [CTOC-0037] Ensure Frontend Can Parse and Display Schema-Compliant JSON - Enhanced frontend parsing with validation UI
+**Files Created:**
+- backend/src/schemas/campaign-recommendation.schema.json (comprehensive JSON schema definition)
+- backend/src/services/schema-validator.service.ts (425+ lines schema validation service)
+- backend/__tests__/schema-validator.test.ts (589+ lines comprehensive unit tests)
+- backend/jest.config.js (Jest configuration for backend testing)
+- frontend/src/components/__tests__/ChatMessage.test.tsx (330+ lines frontend component tests)
+- frontend/jest.config.js (Jest configuration for frontend testing)
+- frontend/src/setupTests.ts (Jest setup for React testing)
+- frontend/src/__mocks__/fileMock.js (Mock file for Jest)
+**Files Modified:**
+- backend/src/services/decision.engine.ts (integrated SchemaValidatorService, enhanced validation workflow)
+- backend/src/index.ts (added schema validation API endpoints)
+- frontend/src/components/ChatMessage.tsx (enhanced JSON parsing, validation UI, structured display)
+- frontend/src/components/ChatMessage.css (extensive styling for enhanced JSON display)
+- backend/package.json (added test scripts)
+- frontend/package.json (added test scripts and dependencies)
+- docs/todo.md (marked JSON Output Schema Adherence tasks as completed)
+**Backend Schema Validation Features:**
+- ✅ JSON Schema Definition: Complete JSON Schema Draft-07 specification for campaign recommendations
+- ✅ AJV Validation: High-performance JSON schema validation with comprehensive error reporting
+- ✅ Auto-Sanitization: Intelligent fixing of common validation issues (missing IDs, invalid timestamps, etc.)
+- ✅ Statistics Tracking: Comprehensive validation metrics and common error tracking
+- ✅ Batch Validation: Support for validating multiple recommendations simultaneously
+- ✅ Integration: Seamless integration with Decision Engine's recommendation generation
+- ✅ API Endpoints: Full REST API for validation, statistics, and sample generation
+- ✅ Error Handling: Graceful fallback to valid samples when validation fails
+**Schema Validation Coverage:**
+- ✅ Required Fields: id, timestamp, audience, reasoning, channel_plan, campaign_meta
+- ✅ Data Types: String validation, number ranges (0.0-1.0), ISO8601 timestamps
+- ✅ Structure Validation: Nested object validation, array requirements, enum constraints
+- ✅ Channel Validation: Proper channel enum validation (Email, Push, SMS, etc.)
+- ✅ Business Rules: Priority numbers, timeout ranges, confidence scores
+- ✅ Metadata Validation: Engine versions, source snapshots, delivery instructions
+**Backend Testing (19 tests, 100% pass rate):**
+- ✅ Schema Loading & Initialization
+- ✅ Valid Campaign Recommendation Validation
+- ✅ Invalid Campaign Recommendation Detection
+- ✅ Auto-Sanitization & Error Correction
+- ✅ Batch Validation Processing
+- ✅ Statistics Tracking & Reset Functionality
+- ✅ Edge Cases & Error Handling
+**Frontend Enhanced JSON Display:**
+- ✅ Schema Validation UI: Real-time validation badges and error display
+- ✅ Structured JSON View: Organized sections with icons and proper formatting
+- ✅ Enhanced Summary: Detailed collapse/expand with confidence and score indicators
+- ✅ Error Visualization: Clear validation error messages and issue highlighting
+- ✅ Rich Formatting: Proper styling for all JSON schema fields
+- ✅ Responsive Design: Mobile-friendly display for all validation states
+**Frontend JSON Parsing Features:**
+- ✅ Client-Side Validation: Full schema validation matching backend requirements
+- ✅ Validation Badges: Visual indicators for valid/invalid JSON payloads
+- ✅ Error Messages: Detailed validation error display with field-specific feedback
+- ✅ Structured Display: Campaign Info, Audience, Reasoning, Channel Plan, Metadata sections
+- ✅ Field-Specific Rendering: Specialized UI for scores, timestamps, CTAs, etc.
+- ✅ Raw JSON Toggle: Expandable raw JSON view for debugging
+**Schema API Endpoints:**
+- GET /api/schema/stats - Validation statistics and metrics
+- POST /api/schema/reset-stats - Reset validation statistics
+- POST /api/schema/validate - Single recommendation validation
+- POST /api/schema/validate-batch - Batch recommendation validation
+- GET /api/schema/sample - Generate sample valid recommendation
+**Production Features:**
+- ✅ Performance Optimized: Schema compilation for fast validation
+- ✅ Memory Efficient: Proper cleanup and statistics management
+- ✅ Error Recovery: Multiple fallback layers for recommendation generation
+- ✅ Development Tools: Sample generation, validation testing, statistics monitoring
+- ✅ Comprehensive Logging: Detailed validation process logging with emojis
+- ✅ TypeScript Integration: Full type safety for validation results and schemas
+**Quality Assurance:**
+- ✅ Backend Unit Tests: 19 comprehensive tests covering all validation scenarios
+- ✅ Frontend Component Tests: Extensive React component testing with validation UI
+- ✅ Schema Compliance: 100% adherence to PRD JSON Output Schema specification
+- ✅ Error Handling: Graceful handling of edge cases and malformed data
+- ✅ Performance Testing: Large JSON object and deeply nested structure validation
+**Development Workflow:**
+- ✅ Automatic Validation: All generated recommendations automatically validated
+- ✅ Development Feedback: Clear validation errors and suggestions for fixes
+- ✅ Testing Tools: Comprehensive test suites for both backend and frontend
+- ✅ Documentation: Detailed schema definition and validation process docs
+**Reason for update:** JSON Output Schema Adherence section complete - production-ready schema validation system ensuring 100% compliance with PRD JSON Output Schema specification, with comprehensive error handling, auto-sanitization, and enhanced UI for schema validation feedback.

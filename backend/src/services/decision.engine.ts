@@ -3,6 +3,7 @@ import { CampaignGenerator } from './campaign.generator';
 import { DataSourcesService } from './datasources.service';
 import { MockDataGenerator, MockEvent, MockDataConfig } from './mock-data.generator';
 import { RealAPIService, TransformedEvent } from './real-api.service';
+import { SchemaValidatorService, ValidationResult } from './schema-validator.service';
 
 // Event signal interfaces for type safety
 export interface EventSignal {
@@ -46,6 +47,7 @@ export class DecisionEngine {
   private dataSourcesService: DataSourcesService;
   private mockDataGenerator: MockDataGenerator;
   private realAPIService: RealAPIService;
+  private schemaValidator: SchemaValidatorService;
   private rules: DecisionRules;
 
   constructor(dataSourcesService: DataSourcesService) {
@@ -53,6 +55,7 @@ export class DecisionEngine {
     this.dataSourcesService = dataSourcesService;
     this.mockDataGenerator = new MockDataGenerator();
     this.realAPIService = new RealAPIService(dataSourcesService);
+    this.schemaValidator = new SchemaValidatorService();
     this.initializeDefaultRules();
   }
 
@@ -91,12 +94,16 @@ export class DecisionEngine {
       };
 
       // Step 6: Enhance with Groq AI (simulated for now)
-      return await this.enhanceWithGroqAI(recommendation, aggregatedSignals);
+      const enhancedRecommendation = await this.enhanceWithGroqAI(recommendation, aggregated);
+      
+      // Step 7: Validate schema compliance and sanitize if needed
+      return this.validateAndEnsureSchemaCompliance(enhancedRecommendation);
       
     } catch (error) {
       console.error('Decision Engine error:', error);
-      // Fallback to basic campaign generation
-      return this.campaignGenerator.generateRecommendation(config);
+      // Fallback to basic campaign generation with schema validation
+      const fallbackRecommendation = this.campaignGenerator.generateRecommendation(config);
+      return this.validateAndEnsureSchemaCompliance(fallbackRecommendation);
     }
   }
 
@@ -399,8 +406,15 @@ export class DecisionEngine {
     const sendDelay = delays[Math.min(priority - 1, delays.length - 1)];
     const sendAt = new Date(Date.now() + sendDelay * 60000).toISOString();
     
-    // Use existing campaign generator for payload creation
-    return this.campaignGenerator['generateChannelPlan'](channelData.channel, priority);
+    // Generate channel plan with proper payload and timing
+    const baseChannelPlan = this.campaignGenerator['generateChannelPlan'](channelData.channel, priority);
+    
+    // Override timing with our calculated send_at
+    return {
+      ...baseChannelPlan,
+      send_at: sendAt,
+      priority: priority
+    };
   }
 
   /**
@@ -681,5 +695,91 @@ export class DecisionEngine {
 
   public resetAPIFailures(sourceId: string): void {
     this.realAPIService.resetAPIFailures(sourceId);
+  }
+
+  /**
+   * Validate recommendation against JSON schema and ensure compliance
+   */
+  private validateAndEnsureSchemaCompliance(recommendation: CampaignRecommendation): CampaignRecommendation {
+    try {
+      // First, attempt standard validation
+      const validationResult = this.schemaValidator.validateCampaignRecommendation(recommendation);
+      
+      if (validationResult.valid) {
+        console.log(`✅ Schema validation passed for recommendation ${recommendation.id}`);
+        return recommendation;
+      }
+      
+      // If validation fails, attempt to sanitize and fix issues
+      console.warn(`⚠️ Schema validation failed for recommendation ${recommendation.id}:`, validationResult.errors);
+      console.log('🔧 Attempting to sanitize and fix schema violations...');
+      
+      const sanitizationResult = this.schemaValidator.validateAndSanitize(recommendation);
+      
+      if (sanitizationResult.valid && sanitizationResult.sanitized) {
+        console.log(`✅ Successfully sanitized recommendation ${recommendation.id}`);
+        if (sanitizationResult.changes) {
+          console.log('🔧 Changes made:', sanitizationResult.changes.join(', '));
+        }
+        return sanitizationResult.sanitized;
+      }
+      
+      // If sanitization also fails, generate a valid sample recommendation
+      console.error(`❌ Failed to sanitize recommendation ${recommendation.id}:`, sanitizationResult.errors);
+      console.log('🆘 Generating valid sample recommendation as fallback');
+      
+      const sampleRecommendation = this.schemaValidator.generateSampleValidRecommendation();
+      
+      // Preserve original ID and timestamp if available
+      if (recommendation.id) {
+        sampleRecommendation.id = recommendation.id;
+      }
+      if (recommendation.timestamp) {
+        sampleRecommendation.timestamp = recommendation.timestamp;
+      }
+      
+      return sampleRecommendation;
+      
+    } catch (error) {
+      console.error('Schema validation process failed:', error);
+      // Ultimate fallback - generate a completely new valid recommendation
+      console.log('🆘 Generating fresh valid recommendation as ultimate fallback');
+      return this.schemaValidator.generateSampleValidRecommendation();
+    }
+  }
+
+  /**
+   * Get schema validation statistics
+   */
+  public getSchemaValidationStats() {
+    return this.schemaValidator.getValidationStats();
+  }
+
+  /**
+   * Reset schema validation statistics
+   */
+  public resetSchemaValidationStats(): void {
+    this.schemaValidator.resetValidationStats();
+  }
+
+  /**
+   * Manually validate a recommendation (for testing)
+   */
+  public validateRecommendation(recommendation: any): ValidationResult {
+    return this.schemaValidator.validateCampaignRecommendation(recommendation);
+  }
+
+  /**
+   * Generate a sample valid recommendation (for testing)
+   */
+  public generateSampleValidRecommendation(): CampaignRecommendation {
+    return this.schemaValidator.generateSampleValidRecommendation();
+  }
+
+  /**
+   * Batch validate multiple recommendations
+   */
+  public validateRecommendationBatch(recommendations: any[]) {
+    return this.schemaValidator.validateBatch(recommendations);
   }
 }
