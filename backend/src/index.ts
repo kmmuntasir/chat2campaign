@@ -414,6 +414,99 @@ app.post('/api/decision-engine/generate', async (req, res) => {
   }
 });
 
+// Real API Integration endpoints
+app.get('/api/real-api/health', (req, res) => {
+  try {
+    const healthStatus = decisionEngine.getAPIHealthStatus();
+    
+    res.json({
+      message: 'API health status retrieved successfully',
+      timestamp: new Date().toISOString(),
+      health_status: healthStatus
+    });
+  } catch (error) {
+    console.error('Error getting API health status:', error);
+    res.status(500).json({ error: 'Failed to get API health status' });
+  }
+});
+
+app.post('/api/real-api/test/:sourceId', async (req, res) => {
+  try {
+    const { sourceId } = req.params;
+    
+    const testResult = await decisionEngine.testAPIConnection(sourceId);
+    
+    res.json({
+      message: `API connection test for ${sourceId}`,
+      sourceId: sourceId,
+      ...testResult
+    });
+  } catch (error) {
+    console.error(`Error testing API connection for ${req.params.sourceId}:`, error);
+    res.status(500).json({ error: 'Failed to test API connection' });
+  }
+});
+
+app.post('/api/real-api/reset-failures/:sourceId', (req, res) => {
+  try {
+    const { sourceId } = req.params;
+    
+    decisionEngine.resetAPIFailures(sourceId);
+    
+    res.json({
+      message: `Reset API failure tracking for ${sourceId}`,
+      sourceId: sourceId,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error(`Error resetting API failures for ${req.params.sourceId}:`, error);
+    res.status(500).json({ error: 'Failed to reset API failures' });
+  }
+});
+
+app.post('/api/real-api/test-all', async (req, res) => {
+  try {
+    const sources = dataSourcesService.getAllSources()
+      .filter(source => {
+        const config = dataSourcesService.getSourceConfig(source.id);
+        return config?.type === 'real_api' && config?.enabled;
+      });
+    
+    const results: any = {};
+    
+    for (const source of sources) {
+      try {
+        const testResult = await decisionEngine.testAPIConnection(source.id);
+        results[source.id] = testResult;
+      } catch (error) {
+        results[source.id] = {
+          success: false,
+          message: `Test failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          responseTime: 0
+        };
+      }
+    }
+    
+    const totalSources = Object.keys(results).length;
+    const successfulSources = Object.values(results).filter((r: any) => r.success).length;
+    
+    res.json({
+      message: `Tested ${totalSources} real API sources`,
+      summary: {
+        total_tested: totalSources,
+        successful: successfulSources,
+        failed: totalSources - successfulSources,
+        success_rate: totalSources > 0 ? Math.round((successfulSources / totalSources) * 100) : 0
+      },
+      results: results,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error testing all real API connections:', error);
+    res.status(500).json({ error: 'Failed to test real API connections' });
+  }
+});
+
 // Streaming status and control endpoints
 app.get('/api/streaming/status', (req, res) => {
   const stats = streamingService.getStreamingStats();

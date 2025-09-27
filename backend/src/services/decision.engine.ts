@@ -2,6 +2,7 @@ import { CampaignRecommendation, CampaignChannelPlan, SimulationConfig } from '.
 import { CampaignGenerator } from './campaign.generator';
 import { DataSourcesService } from './datasources.service';
 import { MockDataGenerator, MockEvent, MockDataConfig } from './mock-data.generator';
+import { RealAPIService, TransformedEvent } from './real-api.service';
 
 // Event signal interfaces for type safety
 export interface EventSignal {
@@ -44,12 +45,14 @@ export class DecisionEngine {
   private campaignGenerator: CampaignGenerator;
   private dataSourcesService: DataSourcesService;
   private mockDataGenerator: MockDataGenerator;
+  private realAPIService: RealAPIService;
   private rules: DecisionRules;
 
   constructor(dataSourcesService: DataSourcesService) {
     this.campaignGenerator = new CampaignGenerator();
     this.dataSourcesService = dataSourcesService;
     this.mockDataGenerator = new MockDataGenerator();
+    this.realAPIService = new RealAPIService(dataSourcesService);
     this.initializeDefaultRules();
   }
 
@@ -162,17 +165,53 @@ export class DecisionEngine {
   }
 
   /**
-   * Fetches signals from real API endpoints (placeholder for real implementation)
+   * Fetches signals from real API endpoints with automatic fallback to mock data
    */
   private async fetchRealAPISignals(sourceId: string, config: any): Promise<EventSignal[]> {
-    // TODO: Implement real API fetching based on config.apiConfig
-    // For now, return mocked data with a flag indicating it should be real
-    const mockedSignals = await this.generateMockedSignals(sourceId, null);
-    
-    return mockedSignals.map(signal => ({
-      ...signal,
-      data: { ...signal.data, isRealAPI: true, endpoint: config.apiConfig?.endpoint }
-    }));
+    try {
+      console.log(`Fetching real API data for ${sourceId}...`);
+      
+      // Use RealAPIService to fetch data with automatic fallback
+      const transformedEvents = await this.realAPIService.fetchRealAPIData(sourceId);
+      
+      // Convert TransformedEvents to EventSignals
+      const eventSignals = transformedEvents.map(event => {
+        const weight = this.calculateEventWeight(event.eventType, sourceId);
+        const confidence = event.metadata.is_real_api ? 
+          (0.8 + Math.random() * 0.2) : // Real API gets higher confidence
+          (0.6 + Math.random() * 0.4);   // Mock data gets lower confidence
+        
+        return {
+          id: event.id,
+          source: event.source,
+          type: event.eventType,
+          timestamp: event.timestamp,
+          data: {
+            ...event.data,
+            userId: event.userId,
+            sessionId: event.sessionId,
+            api_metadata: event.metadata
+          },
+          weight: weight,
+          confidence: confidence
+        };
+      });
+      
+      const realAPICount = eventSignals.filter(signal => 
+        signal.data.api_metadata?.is_real_api
+      ).length;
+      
+      const mockCount = eventSignals.length - realAPICount;
+      
+      console.log(`Generated ${eventSignals.length} signals for ${sourceId}: ${realAPICount} real API, ${mockCount} fallback mock`);
+      
+      return eventSignals;
+      
+    } catch (error) {
+      console.error(`Error in fetchRealAPISignals for ${sourceId}:`, error);
+      // Final fallback to basic mock generation if RealAPIService fails completely
+      return this.generateFallbackSignals(sourceId);
+    }
   }
 
   /**
@@ -629,5 +668,18 @@ export class DecisionEngine {
 
   public removeChannelRule(ruleId: string): void {
     this.rules.channelRules = this.rules.channelRules.filter(rule => rule.id !== ruleId);
+  }
+
+  // Real API Service integration methods
+  public getAPIHealthStatus(): Record<string, any> {
+    return this.realAPIService.getAPIHealthStatus();
+  }
+
+  public async testAPIConnection(sourceId: string): Promise<{ success: boolean; message: string; responseTime?: number }> {
+    return await this.realAPIService.testAPIConnection(sourceId);
+  }
+
+  public resetAPIFailures(sourceId: string): void {
+    this.realAPIService.resetAPIFailures(sourceId);
   }
 }

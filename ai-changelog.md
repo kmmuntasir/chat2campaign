@@ -421,3 +421,80 @@
 **Reason for update:** Data Source Integration (Mocked Data) section complete - production-ready mock data generation system providing realistic, consistent, and comprehensive event simulation across all supported data sources for development, testing, and demonstration purposes.
 
 **Ready for commit:** All changes for Data Source Integration (Mocked Data) section complete and ready for version control.
+
+### 2025-09-27 01:18:25
+**Tasks:** [CTOC-0034, CTOC-0035]: Data Source Integration (Real API)
+**Description:** Implemented comprehensive Real API integration system with authentication, data transformation, circuit breaker pattern, and graceful fallback to mock data. Created RealAPIService with support for all major data sources and automatic error handling.
+**Tasks Completed:**
+- ✓ [CTOC-0034] Implement Configurable API Endpoints for Fetching - Comprehensive API client with authentication and transformation
+- ✓ [CTOC-0035] Implement Graceful Fallback to Mock Data if Real API Unavailable - Circuit breaker pattern with automatic fallback
+**Files Created:**
+- backend/src/services/real-api.service.ts (comprehensive real API integration service with 725+ lines)
+**Files Modified:**
+- backend/src/services/decision.engine.ts (integrated RealAPIService, enhanced signal generation with real API support)
+- backend/src/index.ts (added Real API management endpoints for health monitoring and testing)
+- docs/todo.md (marked Data Source Integration (Real API) tasks as completed)
+**RealAPIService Features:**
+- ✅ Authentication support for multiple credential types (API keys, OAuth tokens, custom headers)
+- ✅ Retry logic with exponential backoff for resilient API connections
+- ✅ Circuit breaker pattern with failure tracking and temporary disabling
+- ✅ Graceful fallback to mock data when real APIs fail
+- ✅ Data transformation for all 10 supported data sources
+- ✅ Response time monitoring and performance tracking
+- ✅ Comprehensive error handling and logging
+- ✅ Health status monitoring for all configured APIs
+**Supported Data Sources:**
+- ✅ Website Analytics: Google Analytics, Adobe Analytics, custom analytics APIs
+- ✅ Shopify E-commerce: Orders, customers, products via Shopify Admin API
+- ✅ Facebook Page: Posts, engagement data via Facebook Graph API
+- ✅ Google Ads: Campaign performance, conversions via Google Ads API
+- ✅ CRM Systems: HubSpot, Salesforce, custom CRM integrations
+- ✅ Twitter: Tweet engagement via Twitter API v2
+- ✅ Generic API support for any RESTful data source
+**Authentication Methods:**
+- API Key authentication (X-API-Key header)
+- OAuth 2.0 Bearer token authentication
+- Custom header authentication
+- Platform-specific authentication (Shopify tokens, Facebook access tokens)
+**Error Handling & Resilience:**
+- Circuit breaker pattern with configurable failure thresholds (3 failures = 5min disable)
+- Automatic retry with exponential backoff (2 attempts with increasing delays)
+- 30-second timeout protection for all API requests
+- Detailed failure tracking and health monitoring
+- Seamless fallback to mock data without interrupting campaign generation
+**Data Transformation:**
+- Unified event format across all data sources
+- Source-specific transformation logic for optimal data extraction
+- Quality scoring based on API response time and data completeness
+- Metadata preservation for debugging and monitoring
+- Support for nested API response formats and data structures
+**API Management Endpoints:**
+- GET /api/real-api/health - Health status monitoring for all configured APIs
+- POST /api/real-api/test/:sourceId - Test individual API connections
+- POST /api/real-api/reset-failures/:sourceId - Reset failure tracking for specific sources
+- POST /api/real-api/test-all - Batch test all configured real API sources
+**Decision Engine Integration:**
+- Seamless integration with existing signal aggregation
+- Enhanced confidence scoring for real API vs mock data (real API = 80-100%, mock = 60-80%)
+- Automatic source type detection and appropriate handler selection
+- Comprehensive logging for real API vs fallback mock data usage
+- Performance metrics and response time tracking
+**Production Features:**
+- Environment variable support for sensitive API credentials
+- Configurable timeouts and retry policies per data source
+- Request rate limiting and connection pooling ready
+- Comprehensive audit logging for API calls and failures
+- Health checks and monitoring endpoints for DevOps integration
+**Development & Testing:**
+- Individual API connection testing
+- Batch testing for all configured sources
+- Health status monitoring with detailed failure information
+- API failure reset functionality for development workflows
+- Comprehensive error messages and debugging information
+**Fallback Strategy:**
+- Intelligent fallback detection based on response validation
+- Seamless transition to mock data without campaign interruption
+- Fallback reason logging for debugging and monitoring
+- Automatic recovery when APIs become available again
+- Consistent data structure regardless of source (real vs mock)
+**Reason for update:** Data Source Integration (Real API) section complete - production-ready real API integration system with comprehensive authentication, transformation, error handling, and graceful fallback capabilities for all supported data sources.
