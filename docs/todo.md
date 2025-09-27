@@ -6,7 +6,7 @@
 - [x] Setup Backend Project with Node.js and Express ([CTOC-0003][DevOps] - docs/tasks_list/01_project_setup_infrastructure.md)
 
 ## II. Deployment & CI/CD
-- [ ] Local Development Environment Setup ([CTOC-0005][DevOps] - docs/tasks_list/02_deployment_ci_cd.md)
+- [x] Local Development Environment Setup ([CTOC-0005][DevOps] - docs/tasks_list/02_deployment_ci_cd.md)
 - [~] ~~Basic Deployment to GitHub Pages / Vercel (Frontend)~~ ([CTOC-0006][DevOps] - SKIPPED: Using GitHub Actions later)
 - [~] ~~Basic Deployment to Render / Heroku (Backend)~~ ([CTOC-0007][DevOps] - SKIPPED: Using GitHub Actions later)
 - [~] ~~Configure CI/CD Pipeline for Linting and Testing~~ ([CTOC-0008][DevOps] - SKIPPED: Using GitHub Actions later)
