@@ -14,12 +14,12 @@
 ## III. Feature-Specific Tasks
 
 ### 1. Chat Interface for Campaign Recommendations
-- [ ] Implement Chat-Style UI ([CTOC-0009][FE] - docs/tasks_list/03_chat_interface_recommendations.md)
-- [ ] Display Real-Time JSON Payloads ([CTOC-0010][FE] - docs/tasks_list/03_chat_interface_recommendations.md)
-- [ ] Implement Collapsible JSON Blocks ([CTOC-0011][FE] - docs/tasks_list/03_chat_interface_recommendations.md)
-- [ ] Implement Formatted View for JSON Blocks ([CTOC-0012][FE] - docs/tasks_list/03_chat_interface_recommendations.md)
-- [ ] Implement WebSocket/SSE Streaming ([CTOC-0013][BE] - docs/tasks_list/03_chat_interface_recommendations.md)
-- [ ] Ensure WebSocket/SSE Supports Multiple Simultaneous Users ([CTOC-0014][BE] - docs/tasks_list/03_chat_interface_recommendations.md)
+- [x] Implement Chat-Style UI ([CTOC-0009][FE] - docs/tasks_list/03_chat_interface_recommendations.md)
+- [x] Display Real-Time JSON Payloads ([CTOC-0010][FE] - docs/tasks_list/03_chat_interface_recommendations.md)
+- [x] Implement Collapsible JSON Blocks ([CTOC-0011][FE] - docs/tasks_list/03_chat_interface_recommendations.md)
+- [x] Implement Formatted View for JSON Blocks ([CTOC-0012][FE] - docs/tasks_list/03_chat_interface_recommendations.md)
+- [x] Implement WebSocket/SSE Streaming ([CTOC-0013][BE] - docs/tasks_list/03_chat_interface_recommendations.md)
+- [x] Ensure WebSocket/SSE Supports Multiple Simultaneous Users ([CTOC-0014][BE] - docs/tasks_list/03_chat_interface_recommendations.md)
 
 ### 2. Data Source Selector
 - [ ] Display List of Available Data Sources ([CTOC-0015][FE] - docs/tasks_list/04_data_source_selector.md)
