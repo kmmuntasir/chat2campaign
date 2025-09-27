@@ -22,10 +22,10 @@
 - [x] Ensure WebSocket/SSE Supports Multiple Simultaneous Users ([CTOC-0014][BE] - docs/tasks_list/03_chat_interface_recommendations.md)
 
 ### 2. Data Source Selector
-- [ ] Display List of Available Data Sources ([CTOC-0015][FE] - docs/tasks_list/04_data_source_selector.md)
-- [ ] Implement Data Source Selection Mechanism (Up to 3) ([CTOC-0016][FE] - docs/tasks_list/04_data_source_selector.md)
-- [ ] Implement `/api/sources` Endpoint ([CTOC-0017][BE] - docs/tasks_list/04_data_source_selector.md)
-- [ ] Implement Configurable Mocked/Real Data Logic for `/api/sources` ([CTOC-0018][BE] - docs/tasks_list/04_data_source_selector.md)
+- [x] Display List of Available Data Sources ([CTOC-0015][FE] - docs/tasks_list/04_data_source_selector.md)
+- [x] Implement Data Source Selection Mechanism (Up to 3) ([CTOC-0016][FE] - docs/tasks_list/04_data_source_selector.md)
+- [x] Implement `/api/sources` Endpoint ([CTOC-0017][BE] - docs/tasks_list/04_data_source_selector.md)
+- [x] Implement Configurable Mocked/Real Data Logic for `/api/sources` ([CTOC-0018][BE] - docs/tasks_list/04_data_source_selector.md)
 
 ### 3. Channel Selector
 - [ ] Display List of Available Channels ([CTOC-0019][FE] - docs/tasks_list/05_channel_selector.md)

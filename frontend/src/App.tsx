@@ -3,6 +3,7 @@ import './App.css'
 import { ApiService, WebSocketService } from './services/api'
 import { ChatInterface } from './components/ChatInterface'
 import { ChatMessageData } from './components/ChatMessage'
+import { DataSourceSelector } from './components/DataSourceSelector'
 
 function App() {
   const [backendStatus, setBackendStatus] = useState<string>('Checking...')
@@ -11,6 +12,7 @@ function App() {
   const [wsService] = useState(() => new WebSocketService())
   const [chatMessages, setChatMessages] = useState<ChatMessageData[]>([])
   const [isConnected, setIsConnected] = useState<boolean>(false)
+  const [selectedSources, setSelectedSources] = useState<string[]>([])
 
   useEffect(() => {
     // Test backend connection on component mount
@@ -192,7 +194,15 @@ Config: ${JSON.stringify(configResult.data, null, 2)}`)
         
         <div className="controls-section">
           <div className="controls-panel">
-            <h3>Development Controls</h3>
+            <h3>Campaign Configuration</h3>
+            
+            <div className="data-source-section">
+              <DataSourceSelector 
+                onSelectionChange={setSelectedSources}
+                maxSelections={3}
+                initialSelection={selectedSources}
+              />
+            </div>
             
             <div className="status-section">
               <div className="status-item">
@@ -200,6 +210,9 @@ Config: ${JSON.stringify(configResult.data, null, 2)}`)
               </div>
               <div className="status-item">
                 <strong>WebSocket:</strong> {wsStatus}
+              </div>
+              <div className="status-item">
+                <strong>Selected Sources:</strong> {selectedSources.length}/3
               </div>
             </div>
 
@@ -228,6 +241,7 @@ Config: ${JSON.stringify(configResult.data, null, 2)}`)
             <div className="help-text">
               <p><strong>Quick Start:</strong></p>
               <ol>
+                <li>Select up to 3 data sources above</li>
                 <li>Click "Test Backend" to verify connection</li>
                 <li>Click "Connect WebSocket" for real-time communication</li>
                 <li>Click "Simulate Campaign" to see sample recommendations</li>

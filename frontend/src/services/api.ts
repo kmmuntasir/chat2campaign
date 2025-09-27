@@ -41,8 +41,35 @@ export class ApiService {
   }
 
   // Get data sources
-  static async getSources(): Promise<ApiResponse> {
-    return this.request('/sources');
+  static async getSources(options?: {
+    category?: string;
+    enabledOnly?: boolean;
+    includeStats?: boolean;
+  }): Promise<ApiResponse> {
+    const params = new URLSearchParams();
+    
+    if (options?.category) {
+      params.append('category', options.category);
+    }
+    if (options?.enabledOnly) {
+      params.append('enabled_only', 'true');
+    }
+    if (options?.includeStats) {
+      params.append('include_stats', 'true');
+    }
+    
+    const queryString = params.toString();
+    const endpoint = queryString ? `/sources?${queryString}` : '/sources';
+    
+    return this.request(endpoint);
+  }
+
+  // Validate data source selection
+  static async validateSourceSelection(selectedSources: string[]): Promise<ApiResponse> {
+    return this.request('/sources/validate-selection', {
+      method: 'POST',
+      body: JSON.stringify({ selectedSources }),
+    });
   }
 
   // Start campaign simulation

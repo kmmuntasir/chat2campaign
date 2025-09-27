@@ -23,11 +23,12 @@
 }
 
 .controls-section {
-  width: 350px;
+  width: 450px;
   background: white;
   border-left: 1px solid #dee2e6;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .controls-panel {
@@ -52,6 +53,18 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.data-source-section {
+  margin-bottom: 24px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.data-source-section .data-source-selector {
+  box-shadow: none;
+  border: 1px solid #e9ecef;
+  padding: 16px;
 }
 
 .status-section {

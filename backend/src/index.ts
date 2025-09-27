@@ -5,6 +5,7 @@ import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import { WebSocketService } from './services/websocket.service';
 import { StreamingService } from './services/streaming.service';
+import { DataSourcesService } from './services/datasources.service';
 
 // Load environment variables
 dotenv.config();
@@ -24,6 +25,7 @@ const wss = new WebSocketServer({ server });
 
 // Initialize services
 const wsService = new WebSocketService();
+const dataSourcesService = new DataSourcesService();
 const streamingService = new StreamingService(wsService);
 
 // Initialize WebSocket handling
@@ -41,20 +43,34 @@ app.get('/health', (req, res) => {
 
 // API Routes
 app.get('/api/sources', (req, res) => {
-  const dataSources = [
-    { id: 'website', name: 'Website Events', type: 'mocked' },
-    { id: 'shopify', name: 'Shopify Store', type: 'mocked' },
-    { id: 'facebook_page', name: 'Facebook Page', type: 'mocked' },
-    { id: 'google_tag_manager', name: 'Google Tag Manager', type: 'mocked' },
-    { id: 'google_ads_tag', name: 'Google Ads Tag', type: 'mocked' },
-    { id: 'facebook_pixel', name: 'Facebook Pixel', type: 'mocked' },
-    { id: 'crm_system', name: 'CRM System', type: 'mocked' },
-    { id: 'twitter_page', name: 'Twitter Page', type: 'mocked' },
-    { id: 'review_sites', name: 'Review Sites', type: 'mocked' },
-    { id: 'ad_managers', name: 'Ad Managers', type: 'mocked' }
-  ];
-  
-  res.json(dataSources);
+  try {
+    const { category, enabled_only, include_stats } = req.query;
+    
+    let sources;
+    
+    if (category) {
+      sources = dataSourcesService.getSourcesByCategory(category as string);
+    } else if (enabled_only === 'true') {
+      sources = dataSourcesService.getEnabledSources();
+    } else {
+      sources = dataSourcesService.getAllSources();
+    }
+    
+    const response: any = {
+      sources: sources,
+      total: sources.length
+    };
+    
+    if (include_stats === 'true') {
+      response.stats = dataSourcesService.getSourceStats();
+      response.categories = dataSourcesService.getAvailableCategories();
+    }
+    
+    res.json(response);
+  } catch (error) {
+    console.error('Error fetching data sources:', error);
+    res.status(500).json({ error: 'Failed to fetch data sources' });
+  }
 });
 
 app.post('/api/start', (req, res) => {
@@ -120,6 +136,100 @@ app.get('/api/config', (req, res) => {
 app.post('/api/config', (req, res) => {
   // For now, just return success - could store in database later
   res.json({ message: 'Configuration updated successfully.' });
+});
+
+// Data source configuration endpoints
+app.get('/api/sources/:sourceId', (req, res) => {
+  try {
+    const source = dataSourcesService.getSourceById(req.params.sourceId);
+    if (!source) {
+      return res.status(404).json({ error: 'Data source not found' });
+    }
+    
+    const config = dataSourcesService.getSourceConfig(req.params.sourceId);
+    
+    res.json({ source, config });
+  } catch (error) {
+    console.error('Error fetching data source:', error);
+    res.status(500).json({ error: 'Failed to fetch data source' });
+  }
+});
+
+app.post('/api/sources/:sourceId/config', (req, res) => {
+  try {
+    const { type, enabled, apiConfig } = req.body;
+    
+    const updated = dataSourcesService.updateSourceConfig(req.params.sourceId, {
+      type,
+      enabled,
+      apiConfig
+    });
+    
+    if (!updated) {
+      return res.status(404).json({ error: 'Data source not found' });
+    }
+    
+    res.json({ 
+      message: 'Data source configuration updated successfully',
+      sourceId: req.params.sourceId,
+      config: dataSourcesService.getSourceConfig(req.params.sourceId)
+    });
+  } catch (error) {
+    console.error('Error updating data source config:', error);
+    res.status(500).json({ error: 'Failed to update data source configuration' });
+  }
+});
+
+app.post('/api/sources/validate-selection', (req, res) => {
+  try {
+    const { selectedSources } = req.body;
+    
+    if (!selectedSources || !Array.isArray(selectedSources)) {
+      return res.status(400).json({ error: 'selectedSources array is required' });
+    }
+    
+    const validation = dataSourcesService.validateSourceSelection(selectedSources);
+    
+    if (!validation.valid) {
+      return res.status(400).json({ 
+        error: 'Invalid source selection',
+        details: validation.errors
+      });
+    }
+    
+    const selectedSourceDetails = selectedSources.map(id => 
+      dataSourcesService.getSourceById(id)
+    ).filter(Boolean);
+    
+    res.json({ 
+      valid: true,
+      selectedSources: selectedSourceDetails,
+      count: selectedSources.length
+    });
+  } catch (error) {
+    console.error('Error validating source selection:', error);
+    res.status(500).json({ error: 'Failed to validate source selection' });
+  }
+});
+
+app.post('/api/sources/set-global-type', (req, res) => {
+  try {
+    const { type } = req.body;
+    
+    if (!type || (type !== 'mocked' && type !== 'real_api')) {
+      return res.status(400).json({ error: 'Invalid type. Must be "mocked" or "real_api"' });
+    }
+    
+    dataSourcesService.setGlobalType(type);
+    
+    res.json({ 
+      message: `All data sources set to ${type} mode`,
+      stats: dataSourcesService.getSourceStats()
+    });
+  } catch (error) {
+    console.error('Error setting global type:', error);
+    res.status(500).json({ error: 'Failed to set global type' });
+  }
 });
 
 // Streaming status and control endpoints
