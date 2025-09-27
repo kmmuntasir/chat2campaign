@@ -61,4 +61,4 @@
 - [x] Ensure Frontend Can Parse and Display Schema-Compliant JSON ([CTOC-0037][FE] - docs/tasks_list/11_json_output_schema_adherence.md)
 
 ### 10. Initial Project Setup & Documentation
-- [ ] Create Comprehensive README ([CTOC-0038][Gen] - docs/tasks_list/12_initial_project_setup_documentation.md)
+- [x] Create Comprehensive README ([CTOC-0038][Gen] - docs/tasks_list/12_initial_project_setup_documentation.md)
