@@ -4,6 +4,8 @@ import { ApiService, WebSocketService } from './services/api'
 import { ChatInterface } from './components/ChatInterface'
 import { ChatMessageData } from './components/ChatMessage'
 import { DataSourceSelector } from './components/DataSourceSelector'
+import { ChannelSelector } from './components/ChannelSelector'
+import { ConfigurationPanel } from './components/ConfigurationPanel'
 
 function App() {
   const [backendStatus, setBackendStatus] = useState<string>('Checking...')
@@ -13,6 +15,10 @@ function App() {
   const [chatMessages, setChatMessages] = useState<ChatMessageData[]>([])
   const [isConnected, setIsConnected] = useState<boolean>(false)
   const [selectedSources, setSelectedSources] = useState<string[]>([])
+  const [selectedChannels, setSelectedChannels] = useState<string[]>([])
+  const [isSimulationRunning, setIsSimulationRunning] = useState<boolean>(false)
+  const [sessionId, setSessionId] = useState<string>('')
+  const [showConfigPanel, setShowConfigPanel] = useState<boolean>(false)
 
   useEffect(() => {
     // Test backend connection on component mount
@@ -113,6 +119,145 @@ Config: ${JSON.stringify(configResult.data, null, 2)}`)
     setChatMessages([])
   }
 
+  const openConfigPanel = () => {
+    setShowConfigPanel(true)
+  }
+
+  const closeConfigPanel = () => {
+    setShowConfigPanel(false)
+  }
+
+  const handleConfigUpdate = (sourceId: string, config: any) => {
+    addChatMessage({
+      id: `config-update-${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      type: 'system',
+      content: `Configuration updated for ${sourceId}: ${config.type} mode ${config.enabled ? 'enabled' : 'disabled'}`,
+      isJson: false
+    })
+  }
+
+  const startCampaignSimulation = async () => {
+    try {
+      // Validate selections first
+      if (selectedSources.length === 0) {
+        addChatMessage({
+          id: `error-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          type: 'system',
+          content: 'Please select at least 1 data source before starting simulation.',
+          isJson: false
+        })
+        return
+      }
+
+      if (selectedChannels.length === 0) {
+        addChatMessage({
+          id: `error-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          type: 'system',
+          content: 'Please select at least 1 communication channel before starting simulation.',
+          isJson: false
+        })
+        return
+      }
+
+      // Ensure WebSocket is connected
+      if (!isConnected) {
+        addChatMessage({
+          id: `error-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          type: 'system',
+          content: 'Please connect WebSocket before starting campaign simulation.',
+          isJson: false
+        })
+        return
+      }
+
+      setIsSimulationRunning(true)
+      
+      const result = await ApiService.startCampaign({
+        selectedSources,
+        selectedChannels
+      })
+
+      if (result.error) {
+        addChatMessage({
+          id: `error-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          type: 'system',
+          content: `Failed to start campaign simulation: ${result.error}`,
+          isJson: false
+        })
+        setIsSimulationRunning(false)
+      } else {
+        setSessionId(result.data?.sessionId || '')
+        addChatMessage({
+          id: `success-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          type: 'system',
+          content: `✅ Campaign simulation started successfully! Session: ${result.data?.sessionId}`,
+          isJson: false
+        })
+        
+        // Add configuration details
+        addChatMessage({
+          id: `config-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          type: 'system',
+          content: result.data?.config || result.data,
+          isJson: true
+        })
+      }
+    } catch (error) {
+      console.error('Error starting campaign simulation:', error)
+      addChatMessage({
+        id: `error-${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        type: 'system',
+        content: `Campaign simulation error: ${error}`,
+        isJson: false
+      })
+      setIsSimulationRunning(false)
+    }
+  }
+
+  const stopCampaignSimulation = async () => {
+    try {
+      setIsSimulationRunning(false)
+      
+      const result = await ApiService.stopCampaign()
+
+      if (result.error) {
+        addChatMessage({
+          id: `error-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          type: 'system',
+          content: `Failed to stop campaign simulation: ${result.error}`,
+          isJson: false
+        })
+      } else {
+        setSessionId('')
+        addChatMessage({
+          id: `success-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          type: 'system',
+          content: '⏹️ Campaign simulation stopped successfully.',
+          isJson: false
+        })
+      }
+    } catch (error) {
+      console.error('Error stopping campaign simulation:', error)
+      addChatMessage({
+        id: `error-${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        type: 'system',
+        content: `Stop simulation error: ${error}`,
+        isJson: false
+      })
+    }
+  }
+
   const simulateCampaignRecommendation = () => {
     // Simulate a campaign recommendation JSON
     const sampleRecommendation = {
@@ -204,6 +349,14 @@ Config: ${JSON.stringify(configResult.data, null, 2)}`)
               />
             </div>
             
+            <div className="channel-section">
+              <ChannelSelector 
+                onSelectionChange={setSelectedChannels}
+                maxSelections={4}
+                initialSelection={selectedChannels}
+              />
+            </div>
+            
             <div className="status-section">
               <div className="status-item">
                 <strong>Backend:</strong> {backendStatus}
@@ -213,6 +366,15 @@ Config: ${JSON.stringify(configResult.data, null, 2)}`)
               </div>
               <div className="status-item">
                 <strong>Selected Sources:</strong> {selectedSources.length}/3
+              </div>
+              <div className="status-item">
+                <strong>Selected Channels:</strong> {selectedChannels.length}/4
+              </div>
+              <div className="status-item">
+                <strong>Simulation:</strong> {isSimulationRunning ? 
+                  <span style={{color: '#28a745'}}>🟢 Running {sessionId && `(${sessionId})`}</span> : 
+                  <span style={{color: '#6c757d'}}>⚫ Stopped</span>
+                }
               </div>
             </div>
 
@@ -226,9 +388,36 @@ Config: ${JSON.stringify(configResult.data, null, 2)}`)
               <button onClick={testApiEndpoints} className="control-btn secondary">
                 Test API
               </button>
-              <button onClick={simulateCampaignRecommendation} className="control-btn success">
-                Simulate Campaign
+              <button onClick={openConfigPanel} className="control-btn secondary">
+                🔧 Configuration
               </button>
+            </div>
+            
+            <div className="campaign-controls">
+              <h4>Campaign Simulation</h4>
+              <div className="button-group">
+                <button 
+                  onClick={startCampaignSimulation} 
+                  className="control-btn success" 
+                  disabled={isSimulationRunning || selectedSources.length === 0 || selectedChannels.length === 0 || !isConnected}
+                  title={!isConnected ? 'Connect WebSocket first' : selectedSources.length === 0 ? 'Select at least 1 data source' : selectedChannels.length === 0 ? 'Select at least 1 channel' : ''}
+                >
+                  ▶️ Start Campaign Simulation
+                </button>
+                <button 
+                  onClick={stopCampaignSimulation} 
+                  className="control-btn danger" 
+                  disabled={!isSimulationRunning}
+                >
+                  ⏹️ Stop Campaign Simulation
+                </button>
+              </div>
+              
+              <div className="button-group">
+                <button onClick={simulateCampaignRecommendation} className="control-btn secondary">
+                  Test Sample Recommendation
+                </button>
+              </div>
             </div>
 
             <div className="debug-section">
@@ -242,14 +431,23 @@ Config: ${JSON.stringify(configResult.data, null, 2)}`)
               <p><strong>Quick Start:</strong></p>
               <ol>
                 <li>Select up to 3 data sources above</li>
+                <li>Select up to 4 communication channels</li>
                 <li>Click "Test Backend" to verify connection</li>
                 <li>Click "Connect WebSocket" for real-time communication</li>
-                <li>Click "Simulate Campaign" to see sample recommendations</li>
+                <li>Click "Start Campaign Simulation" to begin streaming recommendations</li>
+                <li>Monitor real-time recommendations in the chat interface</li>
+                <li>Click "Stop Campaign Simulation" to halt streaming</li>
               </ol>
             </div>
           </div>
         </div>
       </div>
+      
+      <ConfigurationPanel 
+        isVisible={showConfigPanel}
+        onClose={closeConfigPanel}
+        onConfigUpdate={handleConfigUpdate}
+      />
     </div>
   )
 }

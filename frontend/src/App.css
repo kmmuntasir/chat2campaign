@@ -136,6 +136,41 @@
   box-shadow: 0 4px 12px rgba(86, 171, 47, 0.3);
 }
 
+.control-btn.danger {
+  background: linear-gradient(135deg, #ff4757 0%, #ff6b7a 100%);
+  color: white;
+  font-weight: 600;
+}
+
+.control-btn.danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+}
+
+.control-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.campaign-controls {
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.campaign-controls h4 {
+  margin: 0 0 12px 0;
+  color: #495057;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
 .debug-section {
   margin-bottom: 20px;
 }

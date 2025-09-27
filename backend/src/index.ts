@@ -6,6 +6,7 @@ import { WebSocketServer } from 'ws';
 import { WebSocketService } from './services/websocket.service';
 import { StreamingService } from './services/streaming.service';
 import { DataSourcesService } from './services/datasources.service';
+import { DecisionEngine } from './services/decision.engine';
 
 // Load environment variables
 dotenv.config();
@@ -26,7 +27,8 @@ const wss = new WebSocketServer({ server });
 // Initialize services
 const wsService = new WebSocketService();
 const dataSourcesService = new DataSourcesService();
-const streamingService = new StreamingService(wsService);
+const decisionEngine = new DecisionEngine(dataSourcesService);
+const streamingService = new StreamingService(wsService, dataSourcesService);
 
 // Initialize WebSocket handling
 wsService.initialize(wss);
@@ -119,23 +121,68 @@ app.post('/api/stop', (req, res) => {
 });
 
 app.get('/api/config', (req, res) => {
-  const config = {
-    availableChannels: ['Email', 'SMS', 'Push', 'WhatsApp', 'Voice', 'Messenger', 'Ads'],
-    availableSources: ['website', 'shopify', 'facebook_page', 'google_tag_manager', 'google_ads_tag', 'facebook_pixel', 'crm_system', 'twitter_page', 'review_sites', 'ad_managers'],
-    defaults: {
-      interval: 5000,
-      maxSources: 3,
-      maxChannels: 4,
-      simulationDuration: 300000
-    }
-  };
-  
-  res.json(config);
+  try {
+    const dataSourcesConfig = dataSourcesService.getAllConfigs();
+    const availableSources = dataSourcesService.getAllSources();
+    
+    const config = {
+      availableChannels: ['Email', 'SMS', 'Push', 'WhatsApp', 'Voice', 'Messenger', 'Ads'],
+      dataSources: availableSources.map(source => ({
+        ...source,
+        config: dataSourcesConfig[source.id] || { type: 'mocked', enabled: true }
+      })),
+      defaults: {
+        interval: 5000,
+        maxSources: 3,
+        maxChannels: 4,
+        simulationDuration: 300000
+      },
+      stats: dataSourcesService.getSourceStats()
+    };
+    
+    res.json(config);
+  } catch (error) {
+    console.error('Error fetching configuration:', error);
+    res.status(500).json({ error: 'Failed to fetch configuration' });
+  }
 });
 
 app.post('/api/config', (req, res) => {
-  // For now, just return success - could store in database later
-  res.json({ message: 'Configuration updated successfully.' });
+  try {
+    const { sourceId, type, enabled, apiConfig } = req.body;
+    
+    if (!sourceId) {
+      return res.status(400).json({ error: 'sourceId is required' });
+    }
+    
+    if (type && type !== 'mocked' && type !== 'real_api') {
+      return res.status(400).json({ error: 'Invalid type. Must be "mocked" or "real_api"' });
+    }
+    
+    const updateData: any = {};
+    if (type !== undefined) updateData.type = type;
+    if (enabled !== undefined) updateData.enabled = enabled;
+    if (apiConfig !== undefined) updateData.apiConfig = apiConfig;
+    
+    const updated = dataSourcesService.updateSourceConfig(sourceId, updateData);
+    
+    if (!updated) {
+      return res.status(404).json({ error: 'Data source not found' });
+    }
+    
+    const updatedConfig = dataSourcesService.getSourceConfig(sourceId);
+    const source = dataSourcesService.getSourceById(sourceId);
+    
+    res.json({ 
+      message: 'Configuration updated successfully.',
+      sourceId,
+      source,
+      config: updatedConfig
+    });
+  } catch (error) {
+    console.error('Error updating configuration:', error);
+    res.status(500).json({ error: 'Failed to update configuration' });
+  }
 });
 
 // Data source configuration endpoints
@@ -232,15 +279,62 @@ app.post('/api/sources/set-global-type', (req, res) => {
   }
 });
 
+// Decision Engine endpoints
+app.get('/api/decision-engine/rules', (req, res) => {
+  try {
+    const rules = decisionEngine.getRules();
+    res.json(rules);
+  } catch (error) {
+    console.error('Error fetching decision engine rules:', error);
+    res.status(500).json({ error: 'Failed to fetch decision engine rules' });
+  }
+});
+
+app.post('/api/decision-engine/rules', (req, res) => {
+  try {
+    const { rules } = req.body;
+    decisionEngine.updateRules(rules);
+    res.json({ message: 'Decision engine rules updated successfully' });
+  } catch (error) {
+    console.error('Error updating decision engine rules:', error);
+    res.status(500).json({ error: 'Failed to update decision engine rules' });
+  }
+});
+
+app.post('/api/decision-engine/generate', async (req, res) => {
+  try {
+    const { selectedSources, selectedChannels } = req.body;
+    
+    if (!selectedSources || !selectedChannels) {
+      return res.status(400).json({ 
+        error: 'selectedSources and selectedChannels are required' 
+      });
+    }
+    
+    const recommendation = await decisionEngine.generateRecommendation({
+      selectedSources,
+      selectedChannels
+    });
+    
+    res.json({
+      message: 'Recommendation generated successfully',
+      recommendation
+    });
+  } catch (error) {
+    console.error('Error generating decision engine recommendation:', error);
+    res.status(500).json({ error: 'Failed to generate recommendation' });
+  }
+});
+
 // Streaming status and control endpoints
 app.get('/api/streaming/status', (req, res) => {
   const stats = streamingService.getStreamingStats();
   res.json(stats);
 });
 
-app.post('/api/streaming/test', (req, res) => {
+app.post('/api/streaming/test', async (req, res) => {
   try {
-    const sent = streamingService.sendTestRecommendation();
+    const sent = await streamingService.sendTestRecommendation();
     res.json({ 
       message: 'Test recommendation sent',
       clientsReached: sent ? 'broadcast' : 'none'
@@ -251,13 +345,24 @@ app.post('/api/streaming/test', (req, res) => {
   }
 });
 
-app.post('/api/streaming/generate', (req, res) => {
+app.post('/api/streaming/generate', async (req, res) => {
   try {
-    const { count = 1, config } = req.body;
-    const recommendations = streamingService.generateBatchRecommendations(count, config);
+    const { selectedSources, selectedChannels } = req.body;
+    
+    if (!selectedSources || !selectedChannels) {
+      return res.status(400).json({ 
+        error: 'selectedSources and selectedChannels are required' 
+      });
+    }
+    
+    const recommendation = await decisionEngine.generateRecommendation({
+      selectedSources,
+      selectedChannels
+    });
+    
     res.json({ 
-      count: recommendations.length,
-      recommendations: recommendations
+      message: 'Single recommendation generated',
+      recommendation
     });
   } catch (error) {
     console.error('Error generating recommendations:', error);

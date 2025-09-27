@@ -83,6 +83,13 @@ export class ApiService {
     });
   }
 
+  // Stop campaign simulation
+  static async stopCampaign(): Promise<ApiResponse> {
+    return this.request('/stop', {
+      method: 'POST',
+    });
+  }
+
   // Get configuration
   static async getConfig(): Promise<ApiResponse> {
     return this.request('/config');

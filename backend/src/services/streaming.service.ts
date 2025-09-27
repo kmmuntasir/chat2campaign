@@ -1,16 +1,20 @@
 import { WebSocketService } from './websocket.service';
 import { CampaignGenerator } from './campaign.generator';
+import { DecisionEngine } from './decision.engine';
+import { DataSourcesService } from './datasources.service';
 import { SimulationConfig, StreamingMessage } from '../types/campaign';
 
 export class StreamingService {
   private wsService: WebSocketService;
   private campaignGenerator: CampaignGenerator;
+  private decisionEngine: DecisionEngine;
   private activeStreams: Map<string, NodeJS.Timeout> = new Map();
   private globalStreamInterval: NodeJS.Timeout | null = null;
 
-  constructor(wsService: WebSocketService) {
+  constructor(wsService: WebSocketService, dataSourcesService: DataSourcesService) {
     this.wsService = wsService;
     this.campaignGenerator = new CampaignGenerator();
+    this.decisionEngine = new DecisionEngine(dataSourcesService);
   }
 
   public startGlobalStreaming(config: {
@@ -33,25 +37,29 @@ export class StreamingService {
 
     console.log('Starting global campaign streaming...', streamConfig);
 
-    this.globalStreamInterval = setInterval(() => {
+    this.globalStreamInterval = setInterval(async () => {
       const activeSimulations = this.wsService.getActiveSimulations();
       
       if (activeSimulations.length > 0) {
         // Generate recommendations for active simulations
         for (let i = 0; i < streamConfig.batchSize; i++) {
-          const recommendation = this.campaignGenerator.generateRecommendation({
-            selectedChannels: streamConfig.channels,
-            selectedSources: streamConfig.sources
-          });
+          try {
+            const recommendation = await this.decisionEngine.generateRecommendation({
+              selectedChannels: streamConfig.channels,
+              selectedSources: streamConfig.sources
+            });
 
-          const message: StreamingMessage = {
-            type: 'campaign_recommendation',
-            data: recommendation,
-            timestamp: new Date().toISOString()
-          };
+            const message: StreamingMessage = {
+              type: 'campaign_recommendation',
+              data: recommendation,
+              timestamp: new Date().toISOString()
+            };
 
-          const sentCount = this.wsService.broadcastToActiveSimulations(message);
-          console.log(`Broadcasted campaign recommendation to ${sentCount} active simulations`);
+            const sentCount = this.wsService.broadcastToActiveSimulations(message);
+            console.log(`Broadcasted Decision Engine recommendation to ${sentCount} active simulations`);
+          } catch (error) {
+            console.error('Error generating Decision Engine recommendation:', error);
+          }
         }
       } else {
         console.log('No active simulations, skipping broadcast');
@@ -93,27 +101,31 @@ export class StreamingService {
     let recommendationCount = 0;
     const maxRecommendations = Math.floor(duration / interval);
 
-    const streamInterval = setInterval(() => {
+    const streamInterval = setInterval(async () => {
       if (recommendationCount >= maxRecommendations) {
         this.stopClientSpecificStream(clientId);
         return;
       }
 
-      const recommendation = this.campaignGenerator.generateRecommendation(config);
-      
-      const message: StreamingMessage = {
-        type: 'campaign_recommendation',
-        data: recommendation,
-        timestamp: new Date().toISOString()
-      };
+      try {
+        const recommendation = await this.decisionEngine.generateRecommendation(config);
+        
+        const message: StreamingMessage = {
+          type: 'campaign_recommendation',
+          data: recommendation,
+          timestamp: new Date().toISOString()
+        };
 
-      const sent = this.wsService.sendMessage(clientId, message);
-      if (sent) {
-        recommendationCount++;
-        console.log(`Sent recommendation ${recommendationCount}/${maxRecommendations} to client ${clientId}`);
-      } else {
-        console.log(`Failed to send to client ${clientId}, stopping stream`);
-        this.stopClientSpecificStream(clientId);
+        const sent = this.wsService.sendMessage(clientId, message);
+        if (sent) {
+          recommendationCount++;
+          console.log(`Sent Decision Engine recommendation ${recommendationCount}/${maxRecommendations} to client ${clientId}`);
+        } else {
+          console.log(`Failed to send to client ${clientId}, stopping stream`);
+          this.stopClientSpecificStream(clientId);
+        }
+      } catch (error) {
+        console.error(`Error generating recommendation for client ${clientId}:`, error);
       }
     }, interval);
 
@@ -156,8 +168,8 @@ export class StreamingService {
     return this.campaignGenerator.generateBatchRecommendations(count, config);
   }
 
-  public sendTestRecommendation(clientId?: string) {
-    const testRecommendation = this.campaignGenerator.generateRecommendation({
+  public async sendTestRecommendation(clientId?: string) {
+    const testRecommendation = await this.decisionEngine.generateRecommendation({
       selectedChannels: ['Email', 'Push'],
       selectedSources: ['website', 'shopify']
     });

@@ -28,26 +28,26 @@
 - [x] Implement Configurable Mocked/Real Data Logic for `/api/sources` ([CTOC-0018][BE] - docs/tasks_list/04_data_source_selector.md)
 
 ### 3. Channel Selector
-- [ ] Display List of Available Channels ([CTOC-0019][FE] - docs/tasks_list/05_channel_selector.md)
-- [ ] Implement Channel Selection Mechanism (Up to 4) ([CTOC-0020][FE] - docs/tasks_list/05_channel_selector.md)
+- [x] Display List of Available Channels ([CTOC-0019][FE] - docs/tasks_list/05_channel_selector.md)
+- [x] Implement Channel Selection Mechanism (Up to 4) ([CTOC-0020][FE] - docs/tasks_list/05_channel_selector.md)
 
 ### 4. Campaign Simulation Controls (Start/Stop)
-- [ ] Implement "Start Campaign Simulation" Button ([CTOC-0021][FE] - docs/tasks_list/06_campaign_simulation_controls.md)
-- [ ] Implement "Stop Campaign Simulation" Button ([CTOC-0022][FE] - docs/tasks_list/06_campaign_simulation_controls.md)
-- [ ] Create `/api/start` Endpoint (Initiation) ([CTOC-0023][BE] - docs/tasks_list/06_campaign_simulation_controls.md)
-- [ ] Implement Logic to Stop Streaming ([CTOC-0024][BE] - docs/tasks_list/06_campaign_simulation_controls.md)
+- [x] Implement "Start Campaign Simulation" Button ([CTOC-0021][FE] - docs/tasks_list/06_campaign_simulation_controls.md)
+- [x] Implement "Stop Campaign Simulation" Button ([CTOC-0022][FE] - docs/tasks_list/06_campaign_simulation_controls.md)
+- [x] Create `/api/start` Endpoint (Initiation) ([CTOC-0023][BE] - docs/tasks_list/06_campaign_simulation_controls.md)
+- [x] Implement Logic to Stop Streaming ([CTOC-0024][BE] - docs/tasks_list/06_campaign_simulation_controls.md)
 
 ### 5. Configuration Panel
-- [ ] Create UI for Configuration Panel ([CTOC-0025][FE] - docs/tasks_list/07_configuration_panel.md)
-- [ ] Implement Persistence for Endpoint Configurations ([CTOC-0026][BE] - docs/tasks_list/07_configuration_panel.md)
-- [ ] Create `/api/config` Endpoint (GET/SET) ([CTOC-0027][BE] - docs/tasks_list/07_configuration_panel.md)
-- [ ] Implement Toggle Functionality for Mocked vs. Real API per Data Source ([CTOC-0028][FE] - docs/tasks_list/07_configuration_panel.md)
-- [ ] Provide Input Fields to Configure API URLs and Auth Tokens ([CTOC-0029][FE] - docs/tasks_list/07_configuration_panel.md)
+- [x] Create UI for Configuration Panel ([CTOC-0025][FE] - docs/tasks_list/07_configuration_panel.md)
+- [x] Implement Persistence for Endpoint Configurations ([CTOC-0026][BE] - docs/tasks_list/07_configuration_panel.md)
+- [x] Create `/api/config` Endpoint (GET/SET) ([CTOC-0027][BE] - docs/tasks_list/07_configuration_panel.md)
+- [x] Implement Toggle Functionality for Mocked vs. Real API per Data Source ([CTOC-0028][FE] - docs/tasks_list/07_configuration_panel.md)
+- [x] Provide Input Fields to Configure API URLs and Auth Tokens ([CTOC-0029][FE] - docs/tasks_list/07_configuration_panel.md)
 
 ### 6. Decision Engine Development
-- [ ] Develop Core Decision Engine (Signal Aggregation) ([CTOC-0030][BE] - docs/tasks_list/08_decision_engine_development.md)
-- [ ] Implement Logic to Generate Structured JSON Payloads ([CTOC-0031][BE] - docs/tasks_list/08_decision_engine_development.md)
-- [ ] Implement Configurable Rules to Prioritize Channels and Messages ([CTOC-0032][BE] - docs/tasks_list/08_decision_engine_development.md)
+- [x] Develop Core Decision Engine (Signal Aggregation) ([CTOC-0030][BE] - docs/tasks_list/08_decision_engine_development.md)
+- [x] Implement Logic to Generate Structured JSON Payloads ([CTOC-0031][BE] - docs/tasks_list/08_decision_engine_development.md)
+- [x] Implement Configurable Rules to Prioritize Channels and Messages ([CTOC-0032][BE] - docs/tasks_list/08_decision_engine_development.md)
 
 ### 7. Data Source Integration (Mocked Data)
 - [ ] Implement Local JSON/Generator for Mocked Events ([CTOC-0033][BE] - docs/tasks_list/09_data_source_integration_mocked_data.md)
