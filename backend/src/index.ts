@@ -45,6 +45,11 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// API Health check endpoint (for frontend)
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
 // API Routes
 app.get('/api/sources', (req, res) => {
   try {
