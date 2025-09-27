@@ -173,34 +173,6 @@ export const ChannelSelector: React.FC<ChannelSelectorProps> = ({
     return filtered;
   };
 
-  const getDeliverySpeedColor = (speed: string) => {
-    switch (speed) {
-      case 'instant': return '#27ae60';
-      case 'fast': return '#f39c12';
-      case 'medium': return '#e67e22';
-      case 'slow': return '#e74c3c';
-      default: return '#95a5a6';
-    }
-  };
-
-  const getCostLevelColor = (cost: string) => {
-    switch (cost) {
-      case 'low': return '#27ae60';
-      case 'medium': return '#f39c12';
-      case 'high': return '#e74c3c';
-      default: return '#95a5a6';
-    }
-  };
-
-  const getReachPotentialColor = (reach: string) => {
-    switch (reach) {
-      case 'very_high': return '#8e44ad';
-      case 'high': return '#3498db';
-      case 'medium': return '#f39c12';
-      case 'low': return '#95a5a6';
-      default: return '#95a5a6';
-    }
-  };
 
   const categories = [...new Set(availableChannels.map(c => c.category))];
   const filteredChannels = getFilteredAndSortedChannels();

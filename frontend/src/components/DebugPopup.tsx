@@ -18,7 +18,6 @@ export const DebugPopup: React.FC<DebugPopupProps> = ({
   apiResponse,
   backendStatus,
   wsStatus,
-  isConnected,
   selectedSources,
   selectedChannels,
   isSimulationRunning,
