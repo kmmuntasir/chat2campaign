@@ -320,7 +320,7 @@ html, body {
       "header header"
       "sources channels"
       "connection campaign";
-    grid-template-rows: auto 70vh auto;
+    grid-template-rows: auto 60vh auto;
   }
 }
 
@@ -362,7 +362,7 @@ html, body {
     gap: 12px;
     height: auto;
     max-height: 55vh;
-    grid-template-rows: auto 35vh 35vh auto auto;
+    grid-template-rows: auto 30vh 30vh auto auto;
   }
 }
 
